@@ -20,6 +20,17 @@
           from_port: 8 # icmp type, -1 = any type
           to_port:  -1 # icmp subtype, -1 = any subtype
           cidr_ip: 0.0.0.0/0
+        - proto: tcp
+          from_port: 5050 
+          to_port: 5050
+          cidr_ip: 0.0.0.0/0
+        - proto: tcp
+          from_port: 8080
+          to_port: 8080
+          cidr_ip: 0.0.0.0/0
+
+
+
 
   - name: Provision a set of instances
     ec2:
