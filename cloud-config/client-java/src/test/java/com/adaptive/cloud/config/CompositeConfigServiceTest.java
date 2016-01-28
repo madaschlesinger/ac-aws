@@ -98,6 +98,34 @@ public class CompositeConfigServiceTest {
     }
 
     @Test
+    public void itShould_MergePropertiesWherePathsMatch() {
+        when(node1.name()).thenReturn("a node");
+        when(node2.name()).thenReturn("a node");
+        when(node1.property("a property")).thenReturn(property1);
+        when(node2.property("a property")).thenReturn(property2);
+        when(property1.name()).thenReturn("a property");
+        when(property2.name()).thenReturn("a property");
+
+        composite = CompositeConfigService.of(service1, service2);
+        assertThat(composite.root().child("a node").properties().size(), is(1));
+    }
+
+    @Test
+    public void itShould_FavourTheFirstServiceWherePropertyPathsMatch() {
+        when(node1.name()).thenReturn("a node");
+        when(node2.name()).thenReturn("a node");
+        when(node1.property("a property")).thenReturn(property1);
+        when(node2.property("a property")).thenReturn(property2);
+        when(property1.name()).thenReturn("a property");
+        when(property2.name()).thenReturn("a property");
+        when(property1.asString()).thenReturn("first source value");
+        when(property2.asString()).thenReturn("second source value");
+
+        composite = CompositeConfigService.of(service1, service2);
+        assertThat(composite.root().child("a node").property("a property").asString(), is("first source value"));
+    }
+
+    @Test
     public void itShould_ReturnNullForUnknownProperties() {
         composite = CompositeConfigService.of(service1);
         assertThat(composite.root().child("node1").property("unknown"), is(nullValue()));

@@ -19,21 +19,21 @@ import java.util.*;
  * @author Spencer Ward
  */
 
-class CompositeNode implements ConfigNode {
+class CompositeConfigNode implements ConfigNode {
     private final ConfigNode parent;
     private final List<ConfigNode> nodes;
 
-    private CompositeNode(ConfigNode parent, List<ConfigNode> nodes) {
+    private CompositeConfigNode(ConfigNode parent, List<ConfigNode> nodes) {
         this.parent = parent;
         this.nodes = nodes;
     }
 
-    static CompositeNode createRoot() {
-        return new CompositeNode(null, new ArrayList<ConfigNode>());
+    static CompositeConfigNode createRoot() {
+        return new CompositeConfigNode(null, new ArrayList<ConfigNode>());
     }
 
-    private CompositeNode createChild(List<ConfigNode> nodes) {
-        return new CompositeNode(this, nodes);
+    private CompositeConfigNode createChild(List<ConfigNode> nodes) {
+        return new CompositeConfigNode(this, nodes);
     }
 
     @Override
@@ -56,6 +56,20 @@ class CompositeNode implements ConfigNode {
         return childrenByName().get(name);
     }
 
+    @Override
+    public Collection<Property> properties() {
+        return propertiesByName().values();
+    }
+
+    @Override
+    public Property property(String name) {
+        return propertiesByName().get(name);
+    }
+
+    protected void merge(ConfigNode node) {
+        nodes.add(node);
+    }
+
     private Map<String, ConfigNode> childrenByName() {
         Multimap<String, ConfigNode> children = ArrayListMultimap.create();
         for (ConfigNode node : nodes) {
@@ -71,27 +85,13 @@ class CompositeNode implements ConfigNode {
         });
     }
 
-    @Override
-    public Collection<Property> properties() {
-        List<Property> properties = new ArrayList<>();
-        for (ConfigNode node : nodes) {
-            properties.addAll(node.properties());
-        }
-        return properties;
-    }
-
-    @Override
-    public Property property(String name) {
-        for (ConfigNode node : nodes) {
-            Property property = node.property(name);
-            if (property != null) {
-                return property;
+    private Map<String, Property> propertiesByName() {
+        Map<String, Property> properties = new HashMap<>();
+        for (ConfigNode node : Lists.reverse(nodes)) {
+            for (Property property : node.properties()) {
+                properties.put(property.name(), property);
             }
         }
-        return null;
-    }
-
-    protected void merge(ConfigNode node) {
-        nodes.add(node);
+        return properties;
     }
 }
