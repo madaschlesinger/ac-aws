@@ -1,5 +1,0 @@
-cloud-config
-============
-
-A candidate API for a configuration service backed by switchable sources.
-
