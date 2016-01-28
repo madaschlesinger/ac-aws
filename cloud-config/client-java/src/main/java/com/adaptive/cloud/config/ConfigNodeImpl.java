@@ -86,5 +86,4 @@ class ConfigNodeImpl implements ConfigNode {
     public Property property(String name) {
         return properties.get(name);
     }
-
 }

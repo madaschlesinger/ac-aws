@@ -24,7 +24,7 @@ public class FileConfigService implements ConfigService {
 
 	private FileConfigService() {
 		PlaceholderResolver resolver = new PlaceholderResolver();
-		root = ConfigNodeImpl.createRoot(resolver);
+		this.root = ConfigNodeImpl.createRoot(resolver);
 	}
 
 	/**
