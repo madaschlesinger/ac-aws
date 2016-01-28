@@ -1,16 +1,16 @@
 package com.adaptive.cloud.config;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import com.google.common.base.Function;
+import com.google.common.collect.*;
+
+import java.util.*;
 
 /**
  * Implementation of {@link ConfigNode} that aggregates several nodes into one.
  * <p>
- * Root nodes might be merged to compose data from multiple sources, and other nodes in the heirarchy
- * might be merged to provide property augmentation and overriding facilities.
+ * Root nodes might be merged to compose data from multiple sources, and other nodes in the hierarchy
+ * might be merged to allow property augmentation and overriding.
  * </p>
- * <h1>Example Usage</h1>
  * <p>
  * Note that the order nodes are added is important. Properties and child nodes will be resolved by the first instance they're found in.
  * </p>
@@ -20,8 +20,15 @@ import java.util.List;
 
 class CompositeNode implements ConfigNode {
     private List<ConfigNode> nodes = new ArrayList<>();
-    
-    public void add(ConfigNode node) {
+
+    CompositeNode() {
+    }
+
+    CompositeNode(Collection<ConfigNode> configNodes) {
+        nodes.addAll(configNodes);
+    }
+
+    void add(ConfigNode node) {
         nodes.add(node);
     }
 
@@ -37,16 +44,27 @@ class CompositeNode implements ConfigNode {
 
     @Override
     public Collection<ConfigNode> children() {
-        List<ConfigNode> children = new ArrayList<>();
-        for (ConfigNode node : nodes) {
-            children.addAll(node.children());
-        }
-        return children;
+        return childrenByName().values();
     }
 
     @Override
     public ConfigNode child(String name) {
-        throw new UnsupportedOperationException();
+        return childrenByName().get(name);
+    }
+
+    private Map<String, ConfigNode> childrenByName() {
+        Multimap<String, ConfigNode> children = ArrayListMultimap.create();
+        for (ConfigNode node : nodes) {
+            for (ConfigNode child : node.children()) {
+                children.put(child.name(), child);
+            }
+        }
+        
+        return Maps.transformValues(children.asMap(), new Function<Collection<ConfigNode>, ConfigNode>() {
+            public ConfigNode apply(Collection<ConfigNode> configNodes) {
+                return configNodes.size() == 1 ? configNodes.iterator().next() : new CompositeNode(configNodes);
+            }
+        });
     }
 
     @Override

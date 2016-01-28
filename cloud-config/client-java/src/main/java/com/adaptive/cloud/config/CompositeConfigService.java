@@ -25,16 +25,14 @@ import java.util.List;
 public class CompositeConfigService implements ConfigService {
 	private List<ConfigService> services = new ArrayList<>();
 
-	public void add(ConfigService config) {
-		services.add(config);
-	}
-
 	@Override
 	public void close() throws Exception {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void open() throws Exception {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -58,4 +56,7 @@ public class CompositeConfigService implements ConfigService {
 		return composite;
 	}
 
+	private void add(ConfigService config) {
+		services.add(config);
+	}
 }
