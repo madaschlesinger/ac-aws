@@ -1,4 +1,4 @@
-[![Circle CI](https://circleci.com/gh/AdaptiveConsulting/JPMC-Cloud.svg?style=svg&circle-token=:circle-token&raw=true)](https://circleci.com/gh/AdaptiveConsulting/JPMC-Cloud)
+[![Circle CI](https://circleci.com/gh/AdaptiveConsulting/JPMC-Cloud.png?style=shield&circle-token=:circle-token)](https://circleci.com/gh/AdaptiveConsulting/JPMC-Cloud)
 
 
 
