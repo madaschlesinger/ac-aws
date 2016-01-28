@@ -38,8 +38,12 @@ public class CompositeConfigServiceTest {
         when(node2.name()).thenReturn("node2");
         when(node1.properties()).thenReturn(Collections.singleton(property1));
         when(node2.properties()).thenReturn(Collections.singleton(property2));
+        when(node1.property("property1")).thenReturn(property1);
+        when(node2.property("property2")).thenReturn(property2);
         when(property1.name()).thenReturn("property1");
         when(property2.name()).thenReturn("property2");
+        when(property1.asString()).thenReturn("value1");
+        when(property2.asString()).thenReturn("value2");
     }
 
     @Test
@@ -84,5 +88,18 @@ public class CompositeConfigServiceTest {
         composite = CompositeConfigService.of(service1, service2);
         assertThat(composite.root().children().size(), is(1));
         assertThat(composite.root().child("a node").properties().size(), is(2));
+    }
+
+    @Test
+    public void itShould_ProvideAccessToPropertiesOfComposedServices() {
+        composite = CompositeConfigService.of(service1, service2);
+        assertThat(composite.root().child("node1").property("property1").asString(), is("value1"));
+        assertThat(composite.root().child("node2").property("property2").asString(), is("value2"));
+    }
+
+    @Test
+    public void itShould_ReturnNullForUnknownProperties() {
+        composite = CompositeConfigService.of(service1);
+        assertThat(composite.root().child("node1").property("unknown"), is(nullValue()));
     }
 }

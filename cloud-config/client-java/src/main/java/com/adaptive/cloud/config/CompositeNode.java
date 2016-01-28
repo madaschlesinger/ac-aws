@@ -82,7 +82,13 @@ class CompositeNode implements ConfigNode {
 
     @Override
     public Property property(String name) {
-        throw new UnsupportedOperationException();
+        for (ConfigNode node : nodes) {
+            Property property = node.property(name);
+            if (property != null) {
+                return property;
+            }
+        }
+        return null;
     }
 
     protected void merge(ConfigNode node) {
