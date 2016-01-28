@@ -37,3 +37,8 @@
       - mesos
       - marathon
       - zookeeper
+
+    - name: Systemd script.
+      template: src=templates/zookeeper.service.j2 dest=/usr/lib/systemd/system/zookeeper.service
+
+    - shell : /usr/lib/zookeeper/bin/zkServer.sh start
