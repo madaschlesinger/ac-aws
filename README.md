@@ -1,4 +1,5 @@
-[![Circle CI](https://circleci.com/gh/AdaptiveConsulting/JPMC-Cloud.svg?style=svg&circle-token=801547883329d22e505634493b58b26fbb742e46)](https://circleci.com/gh/AdaptiveConsulting/JPMC-Cloud)
+[![Circle CI](https://circleci.com/gh/AdaptiveConsulting/JPMC-Cloud.svg?style=svg&circle-token=:circle-token)](https://circleci.com/gh/AdaptiveConsulting/JPMC-Cloud)
+
 
 
 cloud-config
