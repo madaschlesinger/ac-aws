@@ -1,3 +1,5 @@
+https://circleci.com/gh/AdaptiveConsulting/JPMC-Cloud.png?circle-token=:circle-token
+
 cloud-config
 ============
 
