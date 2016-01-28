@@ -6,7 +6,8 @@ import com.google.common.collect.*;
 import java.util.*;
 
 /**
- * Implementation of {@link ConfigNode} that aggregates several nodes into one.
+ * Implementation of {@link ConfigNode} that aggregates several nodes into one.  These nodes should have
+ * the same name.
  * <p>
  * Root nodes might be merged to compose data from multiple sources, and other nodes in the hierarchy
  * might be merged to allow property augmentation and overriding.
@@ -19,27 +20,30 @@ import java.util.*;
  */
 
 class CompositeNode implements ConfigNode {
-    private List<ConfigNode> nodes = new ArrayList<>();
+    private final ConfigNode parent;
+    private final List<ConfigNode> nodes;
 
-    CompositeNode() {
+    private CompositeNode(ConfigNode parent, List<ConfigNode> nodes) {
+        this.parent = parent;
+        this.nodes = nodes;
     }
 
-    CompositeNode(Collection<ConfigNode> configNodes) {
-        nodes.addAll(configNodes);
+    static CompositeNode createRoot() {
+        return new CompositeNode(null, new ArrayList<ConfigNode>());
     }
 
-    void add(ConfigNode node) {
-        nodes.add(node);
+    private CompositeNode createChild(List<ConfigNode> nodes) {
+        return new CompositeNode(this, nodes);
     }
 
     @Override
     public String name() {
-        throw new UnsupportedOperationException();
+        return nodes.size() == 0 ? null : nodes.get(0).name();
     }
 
     @Override
     public ConfigNode parent() {
-        throw new UnsupportedOperationException();
+        return parent;
     }
 
     @Override
@@ -59,10 +63,10 @@ class CompositeNode implements ConfigNode {
                 children.put(child.name(), child);
             }
         }
-        
+
         return Maps.transformValues(children.asMap(), new Function<Collection<ConfigNode>, ConfigNode>() {
-            public ConfigNode apply(Collection<ConfigNode> configNodes) {
-                return configNodes.size() == 1 ? configNodes.iterator().next() : new CompositeNode(configNodes);
+            public ConfigNode apply(Collection<ConfigNode> nodes) {
+                return createChild(new ArrayList<>(nodes));
             }
         });
     }
@@ -79,5 +83,9 @@ class CompositeNode implements ConfigNode {
     @Override
     public Property property(String name) {
         throw new UnsupportedOperationException();
+    }
+
+    protected void merge(ConfigNode node) {
+        nodes.add(node);
     }
 }
