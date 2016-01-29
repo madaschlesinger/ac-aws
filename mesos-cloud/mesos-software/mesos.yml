@@ -46,6 +46,9 @@
 
     - service : name=zookeeper state=started enabled=yes
     - service : name=mesos-master state=started enabled=yes
+
+    - template : src="templates/external_ip.j2" dest="/etc/marathon/conf/hostname"
+
     - service : name=marathon state=started enabled=yes
 
     - name: Recap
