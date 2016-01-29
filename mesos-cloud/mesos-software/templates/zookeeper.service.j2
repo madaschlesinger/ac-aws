@@ -1,15 +1,14 @@
 # {{ansible_managed}}
 
 [Unit]
-Description=ZooKeeper
+Description=Zookeeper
+After=network.target
+Wants=network.target
 
 [Service]
-Type=simple
-User=zookeeper
-Group=zookeeper
 ExecStart=/usr/lib/zookeeper/bin/zkServer.sh start-foreground
-
-TimeoutSec=300
+Restart=always
+RestartSec=20
 
 [Install]
 WantedBy=multi-user.target
