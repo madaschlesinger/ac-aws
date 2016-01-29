@@ -34,7 +34,7 @@
     - name: Install different software packages
       yum: pkg={{item}} state=latest update_cache=yes
       with_items:
-      - mesos-slave
+      - mesos
 
     - service : name=mesos-slave state=started enabled=yes
 
