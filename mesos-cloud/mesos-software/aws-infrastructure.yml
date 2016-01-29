@@ -5,7 +5,7 @@
 
   tasks:
 
-  - name: example ec2 group
+  - name: Mesos security Group
     ec2_group:
       name: Mesos-SG
       description: Security Group for Mesos Master
@@ -32,7 +32,7 @@
 
 
 
-  - name: Provision a set of instances
+  - name: Provision a set of instances for Mesos-Marathon Masters
     ec2:
       key_name: cristian
       instance_type: t2.micro
@@ -45,8 +45,27 @@
          Name: Demo-Mesos
       instance_tags:
          Name: Demo-Mesos
-    register: ec2
+    register: master 
 
   - name: Add all instance public IPs to host group
     add_host: hostname={{ item.public_ip }} groupname=masters
-    with_items: ec2.instances
+    with_items: master.instances
+
+  - name: Provision a set of instances for Mesos Slaves
+    ec2:
+      key_name: cristian
+      instance_type: t2.micro
+      image: "ami-8b8c57f8"
+      group: "Mesos-SG"
+      wait: true
+      region: "eu-west-1"
+      exact_count: 1
+      count_tag:
+         Name: Mesos-Slave
+      instance_tags:
+         Name: Mesos-Slave
+    register: slaves
+
+  - name: Add all instance public IPs to host group
+    add_host: hostname={{ item.public_ip }} groupname=slaves
+    with_items: slaves.instances

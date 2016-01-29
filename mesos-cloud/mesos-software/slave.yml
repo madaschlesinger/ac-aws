@@ -1,5 +1,5 @@
 ---
-- hosts: slaves
+- hosts: tag_Name_Mesos_Slave
   sudo: yes
   remote_user: ec2-user
   gather_facts: True
