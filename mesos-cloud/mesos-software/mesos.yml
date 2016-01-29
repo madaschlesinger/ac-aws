@@ -2,7 +2,7 @@
 - hosts: all
   sudo: yes
   remote_user: ec2-user
-  gather_facts: False
+  gather_facts: True
 
   tasks:
 
@@ -41,4 +41,7 @@
     - name: Systemd script.
       template: src=templates/zookeeper.service.j2 dest=/usr/lib/systemd/system/zookeeper.service
 
-    - shell : /usr/lib/zookeeper/bin/zkServer.sh start
+    - name: zoo.cfg
+      template: src=templates/zookeeper.cfg.j2 dest=/etc/zookeeper/conf/zoo.cfg
+
+    - service : name=zookeeper state=started enabled=yes
