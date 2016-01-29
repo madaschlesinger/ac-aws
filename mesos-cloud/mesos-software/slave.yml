@@ -37,7 +37,8 @@
       - mesos
 
     - template: src="templates/mesos.zk.j2" dest="/etc/mesos/zk"
-    - service : name=mesos-slave state=started enabled=yes
+    - template: src="templates/external_ip.j2" dest="/etc/mesos-slave/hostname"
+    - service : name=mesos-slave state=restarted enabled=yes
 
     - name: Recap
       debug: var=hostvars[inventory_hostname]
