@@ -1,5 +1,5 @@
 ---
-- hosts: mesos-static
+- hosts: all
   sudo: yes
   remote_user: ec2-user
   gather_facts: False
