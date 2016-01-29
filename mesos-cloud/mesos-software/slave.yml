@@ -36,6 +36,7 @@
       with_items:
       - mesos
 
+    - template: src="templates/mesos.zk.j2" dest="/etc/mesos/zk"
     - service : name=mesos-slave state=started enabled=yes
 
     - name: Recap
