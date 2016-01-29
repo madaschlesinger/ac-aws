@@ -1,5 +1,6 @@
 package com.adaptive.cloud.config;
 
+import com.adaptive.cloud.config.file.FileConfigService;
 import org.junit.Before;
 import org.junit.Test;
 

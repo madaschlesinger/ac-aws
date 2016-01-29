@@ -1,4 +1,7 @@
-package com.adaptive.cloud.config;
+package com.adaptive.cloud.config.file;
+
+import com.adaptive.cloud.config.InvalidConversionException;
+import com.adaptive.cloud.config.Property;
 
 import java.util.List;
 

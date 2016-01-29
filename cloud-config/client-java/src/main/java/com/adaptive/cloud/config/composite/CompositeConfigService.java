@@ -1,6 +1,8 @@
-package com.adaptive.cloud.config;
+package com.adaptive.cloud.config.composite;
 
-import java.util.ArrayList;
+import com.adaptive.cloud.config.ConfigNode;
+import com.adaptive.cloud.config.ConfigService;
+
 import java.util.Arrays;
 import java.util.List;
 
