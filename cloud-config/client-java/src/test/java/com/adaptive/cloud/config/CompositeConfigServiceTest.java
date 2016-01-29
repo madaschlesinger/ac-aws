@@ -1,6 +1,8 @@
 package com.adaptive.cloud.config;
 
+import org.hamcrest.CoreMatchers;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -14,6 +16,8 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -57,6 +61,12 @@ public class CompositeConfigServiceTest {
     public void itShould_HaveAParentlessRoot() {
         composite = CompositeConfigService.of();
         assertThat(composite.root().parent(), is(nullValue()));
+    }
+
+    @Test
+    public void itShould_HaveAnUnnamedRoot() {
+        composite = CompositeConfigService.of();
+        assertThat(composite.root().name(), is(nullValue()));
     }
 
     @Test
@@ -130,4 +140,43 @@ public class CompositeConfigServiceTest {
         composite = CompositeConfigService.of(service1);
         assertThat(composite.root().child("node1").property("unknown"), is(nullValue()));
     }
+
+    @Test
+    @Ignore
+    public void itShould_GetPropertyWithPlaceholders() throws Exception {
+        when(property1.asString()).thenReturn("value1");
+        when(property2.asString()).thenReturn("${node1.value1}");
+        composite = CompositeConfigService.of(service1, service2);
+        assertThat(composite.root().child("node2").property("property2").asString(), is("value1"));
+    }
+
+    @Test
+    @Ignore
+    public void itShould_GetPropertyWithNestedPlaceholders() throws Exception {
+    }
+
+    @Test(expected=UnresolvedPlaceholderException.class)
+    @Ignore
+    public void itShould_ThrowExceptionWhenPlaceholderNotKnown() throws Exception {
+        when(property1.asString()).thenReturn("${unknown}");
+        composite = CompositeConfigService.of(service1);
+        composite.root().child("node1").property("property1").asString();
+    }
+
+    @Test
+    public void itShould_OpenAllTheComposedServices() throws Exception {
+        composite = CompositeConfigService.of(service1, service2);
+        composite.open();
+        verify(service1, times(1)).open();
+        verify(service2, times(1)).open();
+    }
+
+    @Test
+    public void itShould_CloseAllTheComposedServices() throws Exception {
+        composite = CompositeConfigService.of(service1, service2);
+        composite.close();
+        verify(service1, times(1)).close();
+        verify(service2, times(1)).close();
+    }
+
 }

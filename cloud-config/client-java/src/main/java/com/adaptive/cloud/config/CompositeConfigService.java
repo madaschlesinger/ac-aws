@@ -1,5 +1,9 @@
 package com.adaptive.cloud.config;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Implementation of {@link ConfigService} that aggregates several sources into one.
  * <p>
@@ -20,9 +24,11 @@ package com.adaptive.cloud.config;
  * @author Kevin Seal
  */
 public class CompositeConfigService implements ConfigService {
+	private List<ConfigService> services;
 	private CompositeConfigNode root;
 
 	public CompositeConfigService(ConfigService... services) {
+		this.services = Arrays.asList(services);
 		this.root = CompositeConfigNode.createRoot();
 		for (ConfigService service : services) {
 			root.merge(service.root());
@@ -31,12 +37,16 @@ public class CompositeConfigService implements ConfigService {
 
 	@Override
 	public void close() throws Exception {
-		throw new UnsupportedOperationException();
+		for (ConfigService service : services) {
+			service.close();
+		}
 	}
 
 	@Override
 	public void open() throws Exception {
-		throw new UnsupportedOperationException();
+		for (ConfigService service : services) {
+			service.open();
+		}
 	}
 
 	@Override
