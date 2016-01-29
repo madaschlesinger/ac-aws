@@ -1,6 +1,6 @@
 package com.adaptive.cloud.config;
 
-import org.hamcrest.CoreMatchers;
+import com.adaptive.cloud.config.composite.CompositeConfigService;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -142,7 +142,6 @@ public class CompositeConfigServiceTest {
     }
 
     @Test
-    @Ignore
     public void itShould_GetPropertyWithPlaceholders() throws Exception {
         when(property1.asString()).thenReturn("value1");
         when(property2.asString()).thenReturn("${node1.value1}");
@@ -156,7 +155,6 @@ public class CompositeConfigServiceTest {
     }
 
     @Test(expected=UnresolvedPlaceholderException.class)
-    @Ignore
     public void itShould_ThrowExceptionWhenPlaceholderNotKnown() throws Exception {
         when(property1.asString()).thenReturn("${unknown}");
         composite = CompositeConfigService.of(service1);

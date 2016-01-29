@@ -1,7 +1,12 @@
-package com.adaptive.cloud.config;
+package com.adaptive.cloud.config.composite;
 
+import com.adaptive.cloud.config.ConfigNode;
+import com.adaptive.cloud.config.Property;
 import com.google.common.base.Function;
-import com.google.common.collect.*;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
 
 import java.util.*;
 

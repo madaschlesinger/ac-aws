@@ -1,4 +1,7 @@
-package com.adaptive.cloud.config;
+package com.adaptive.cloud.config.file;
+
+import com.adaptive.cloud.config.ConfigNode;
+import com.adaptive.cloud.config.Property;
 
 import java.util.Collection;
 import java.util.HashMap;
