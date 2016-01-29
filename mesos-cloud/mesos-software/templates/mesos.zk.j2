@@ -1,0 +1,3 @@
+{% for host in groups['tag_Name_Demo_Mesos'] %}
+zk://{{ ansible_eth0["ipv4"]["address"] }}:2181
+{% endfor %}
