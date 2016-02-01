@@ -1,0 +1,15 @@
+---
+
+    - name: Install Zookeeper
+      yum: pkg={{item}} state=latest update_cache=yes
+      with_items:
+      - zookeeper
+
+    - name: Systemd script.
+      template: src=../templates/zookeeper.service.j2 dest=/usr/lib/systemd/system/zookeeper.service
+
+    - name: zoo.cfg
+      template: src=../templates/zookeeper.cfg.j2 dest=/etc/zookeeper/conf/zoo.cfg
+
+    - service : name=zookeeper state=started enabled=yes
+    - service : name=mesos-master state=started enabled=yes

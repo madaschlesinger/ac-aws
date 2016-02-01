@@ -1,0 +1,24 @@
+---
+
+    - copy: src="rpms/cloudera-cdh-4-0.x86_64.rpm" dest=/tmp/
+    - copy: src="rpms/mesosphere-el-repo-7-1.noarch.rpm" dest="/tmp"
+
+    - name: Check if Mesosphere EPEL Repo is installed
+      command: rpm -q mesosphere-el-repo-7-1
+      register: rpm_check_mesos_repo
+      failed_when: false
+      changed_when: false
+
+    - name: Execute script if mesosphere is not installed
+      command: rpm -Uvh /tmp/mesosphere-el-repo-7-1.noarch.rpm
+      when: rpm_check_mesos_repo.stdout.find('is not installed') != -1
+
+    - name: Check if zookeeper EPEL Repo is installed
+      command: rpm -q cloudera-cdh-4-0
+      register: rpm_check_zookeeper_repo
+      failed_when: false
+      changed_when: false
+
+    - name: Execute script if mesosphere is not installed
+      command: rpm -Uvh /tmp/cloudera-cdh-4-0.x86_64.rpm
+      when: rpm_check_zookeeper_repo.stdout.find('is not installed') != -1
