@@ -2,13 +2,18 @@ package com.adaptive.cloud.config.file;
 
 import com.adaptive.cloud.config.ConfigNode;
 import com.adaptive.cloud.config.ConfigService;
+import com.adaptive.cloud.config.Property;
+import com.google.common.base.Splitter;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * A {@code ConfigService} implementation whose nodes are backed by a file.
@@ -73,5 +78,23 @@ public class FileConfigService implements ConfigService {
 	@Override
 	public ConfigNode root() {
 		return root;
+	}
+
+	@Override
+	public Property property(String path) {
+		ConfigNode node = root;
+		String element = "";
+
+		Iterator<String> elements = Splitter.on(".").trimResults().split(path).iterator();
+		while (elements.hasNext()) {
+			element = elements.next();
+			if (elements.hasNext()) {
+				node = node.child(element);
+				if (node == null) {
+					return null;
+				}
+			}
+		}
+		return node.property(element);
 	}
 }
