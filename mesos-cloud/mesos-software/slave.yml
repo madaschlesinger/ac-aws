@@ -6,35 +6,9 @@
 
   tasks:
 
-    - copy: src="rpms/cloudera-cdh-4-0.x86_64.rpm" dest=/tmp/
-    - copy: src="rpms/mesosphere-el-repo-7-1.noarch.rpm" dest="/tmp"
+    - include: tasks/rpms.yml
 
-    - name: Check if Mesosphere EPEL Repo is installed
-      command: rpm -q mesosphere-el-repo-7-1
-      register: rpm_check_mesos_repo
-      failed_when: false
-      changed_when: false
-
-    - name: Execute script if mesosphere is not installed
-      command: rpm -Uvh /tmp/mesosphere-el-repo-7-1.noarch.rpm 
-      when: rpm_check_mesos_repo.stdout.find('is not installed') != -1
-
-    - name: Check if zookeeper EPEL Repo is installed
-      command: rpm -q cloudera-cdh-4-0
-      register: rpm_check_zookeeper_repo
-      failed_when: false
-      changed_when: false
-
-    - name: Execute script if mesosphere is not installed
-      command: rpm -Uvh /tmp/cloudera-cdh-4-0.x86_64.rpm
-      when: rpm_check_zookeeper_repo.stdout.find('is not installed') != -1
-
-
-
-    - name: Install different software packages
-      yum: pkg={{item}} state=latest update_cache=yes
-      with_items:
-      - mesos
+    - include: tasks/mesos.yml
 
     - template: src="templates/mesos.zk.j2" dest="/etc/mesos/zk"
     - template: src="templates/external_ip.j2" dest="/etc/mesos-slave/hostname"
