@@ -27,7 +27,6 @@ class ConfigNodeImpl implements ConfigNode {
         this.resolver = resolver;
         this.properties = new HashMap<>();
         this.children = new HashMap<>();
-        resolver.registerSource(this);
     }
 
     /**
@@ -57,7 +56,7 @@ class ConfigNodeImpl implements ConfigNode {
      * @param value the string representation of the property value
      */
     void addProperty(String name, String value) {
-        properties.put(name, new StringProperty(name, value, resolver));
+        properties.put(name, new StringProperty(name, value, this, resolver));
     }
 
     @Override
