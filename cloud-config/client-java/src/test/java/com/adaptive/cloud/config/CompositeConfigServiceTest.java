@@ -1,6 +1,7 @@
 package com.adaptive.cloud.config;
 
 import com.adaptive.cloud.config.composite.CompositeConfigService;
+import com.google.common.collect.ImmutableList;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -16,9 +17,7 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CompositeConfigServiceTest {
@@ -46,8 +45,6 @@ public class CompositeConfigServiceTest {
         when(node2.property("property2")).thenReturn(property2);
         when(property1.name()).thenReturn("property1");
         when(property2.name()).thenReturn("property2");
-//        when(property1.asString()).thenReturn("value1");
-//        when(property2.asString()).thenReturn("value2");
         when(property1.rawValue()).thenReturn("value1");
         when(property2.rawValue()).thenReturn("value2");
     }
@@ -152,8 +149,18 @@ public class CompositeConfigServiceTest {
     }
 
     @Test
-    @Ignore
     public void itShould_GetPropertyWithNestedPlaceholders() throws Exception {
+        Property property3 = mock(Property.class);
+        when(node1.properties()).thenReturn(ImmutableList.of(property1, property3));
+        when(node1.property("property3")).thenReturn(property3);
+        when(property3.name()).thenReturn("property3");
+        when(property3.rawValue()).thenReturn("1");
+
+        when(property1.rawValue()).thenReturn("value1");
+        when(property2.rawValue()).thenReturn("${node1.property${node1.property3}}");
+        composite = CompositeConfigService.of(service1, service2);
+
+        assertThat(composite.root().child("node2").property("property2").asString(), is("value1"));
     }
 
     @Test(expected=UnresolvedPlaceholderException.class)

@@ -41,7 +41,6 @@ public class FileConfigServiceTest {
         assertThat(root.property("unknown.property"), is(nullValue()));
     }
 
-
     @Test(expected=InvalidConversionException.class)
     public void itShould_ThrowExceptionForNonIntegersAccessedAsInteger() throws Exception {
         root.child("node").property("host").asInteger();
