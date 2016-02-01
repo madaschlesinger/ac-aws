@@ -51,10 +51,13 @@
       region: "eu-west-1"
       exact_count: 1
       count_tag:
-         Name: Demo-Mesos
+         Name: Mesos-Master
       instance_tags:
-         Name: Demo-Mesos
-    register: master 
+         Name: Mesos-Master
+      user_data: |
+         #!/bin/bash 
+         echo "Defaults:ec2-user !requiretty" > /etc/sudoers.d/disable_requiretty
+    register: master
 
   - name: Add all instance public IPs to host group
     add_host: hostname={{ item.public_ip }} groupname=masters
@@ -73,6 +76,9 @@
          Name: Mesos-Slave
       instance_tags:
          Name: Mesos-Slave
+      user_data: |
+         #!/bin/bash 
+         echo "Defaults:ec2-user !requiretty" > /etc/sudoers.d/disable_requiretty
     register: slaves
 
   - name: Add all instance public IPs to host group
