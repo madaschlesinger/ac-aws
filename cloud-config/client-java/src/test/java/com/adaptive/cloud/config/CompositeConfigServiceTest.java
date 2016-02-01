@@ -144,10 +144,9 @@ public class CompositeConfigServiceTest {
     }
 
     @Test
-    @Ignore
     public void itShould_GetPropertyWithPlaceholders() throws Exception {
         when(property1.rawValue()).thenReturn("value1");
-        when(property2.rawValue()).thenReturn("${node1.value1}");
+        when(property2.rawValue()).thenReturn("${node1.property1}");
         composite = CompositeConfigService.of(service1, service2);
         assertThat(composite.root().child("node2").property("property2").asString(), is("value1"));
     }

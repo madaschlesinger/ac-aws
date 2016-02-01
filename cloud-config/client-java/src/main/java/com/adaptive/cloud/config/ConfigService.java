@@ -24,11 +24,4 @@ public interface ConfigService extends AutoCloseable {
 	 * </p>
 	 */
 	ConfigNode root();
-
-	/**
-	 * TODO
-	 * @param path
-	 * @return
-     */
-	Property property(String path);
 }

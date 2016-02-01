@@ -13,12 +13,11 @@ import static org.junit.Assert.assertThat;
 
 public class FileConfigServiceTest {
     private ConfigNode root;
-    private ConfigService service;
 
     @Before
     public void before() throws Exception {
         URL fileUrl = getClass().getClassLoader().getResource("test.properties");
-        service = FileConfigService.fromProperties("node", fileUrl);
+        ConfigService service = FileConfigService.fromProperties("node", fileUrl);
         root = service.root();
     }
 
@@ -38,13 +37,8 @@ public class FileConfigServiceTest {
     }
 
     @Test
-    public void itShould_GetPropertiesByPath() throws Exception {
-        assertThat(service.property("node.port").asInteger(), is(1234));
-    }
-
-    @Test
     public void itShould_ReturnNullForGetPropertiesByUnknownPath() throws Exception {
-        assertThat(service.property("unknown.property"), is(nullValue()));
+        assertThat(root.property("unknown.property"), is(nullValue()));
     }
 
 

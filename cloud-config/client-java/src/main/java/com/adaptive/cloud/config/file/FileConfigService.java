@@ -32,6 +32,7 @@ public class FileConfigService implements ConfigService {
 
 	private FileConfigService() {
 		PlaceholderResolver resolver = new PlaceholderResolver();
+		resolver.registerSource(this);
 		this.root = ConfigNodeImpl.createRoot(resolver);
 	}
 
@@ -80,21 +81,5 @@ public class FileConfigService implements ConfigService {
 		return root;
 	}
 
-	@Override
-	public Property property(String path) {
-		ConfigNode node = root;
-		String element = "";
 
-		Iterator<String> elements = Splitter.on(".").trimResults().split(path).iterator();
-		while (elements.hasNext()) {
-			element = elements.next();
-			if (elements.hasNext()) {
-				node = node.child(element);
-				if (node == null) {
-					return null;
-				}
-			}
-		}
-		return node.property(element);
-	}
 }

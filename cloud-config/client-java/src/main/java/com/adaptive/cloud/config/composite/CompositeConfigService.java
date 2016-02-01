@@ -33,6 +33,7 @@ public class CompositeConfigService implements ConfigService {
 
 	public CompositeConfigService(ConfigService... services) {
 		PlaceholderResolver resolver = new PlaceholderResolver();
+		resolver.registerSource(this);
 		this.services = Arrays.asList(services);
 		this.root = CompositeConfigNode.createRoot(resolver);
 		for (ConfigService service : services) {
@@ -57,11 +58,6 @@ public class CompositeConfigService implements ConfigService {
 	@Override
 	public ConfigNode root() {
 		return root;
-	}
-
-	@Override
-	public Property property(String path) {
-		return null;
 	}
 
 	/**
