@@ -1,5 +1,5 @@
 ---
-- hosts: tag_Name_Demo_Mesos
+- hosts: tag_Name_Mesos_Master
   sudo: yes
   remote_user: ec2-user
   gather_facts: True
