@@ -1,5 +1,6 @@
 package com.adaptive.cloud.config.file;
 
+import com.adaptive.cloud.config.ConfigNode;
 import com.adaptive.cloud.config.InvalidConversionException;
 import com.adaptive.cloud.config.Property;
 
@@ -12,14 +13,16 @@ import java.util.List;
  * </p>
  * @author Spencer Ward
  */
-class StringProperty implements Property {
-    private PlaceholderResolver resolver;
-    private String name;
-    private String value;
+public class StringProperty implements Property {
+    private ConfigNode container;
+    private final PlaceholderResolver resolver;
+    private final String name;
+    private final String value;
 
-    StringProperty(String name, String value, PlaceholderResolver resolver) {
+    public StringProperty(String name, String value, ConfigNode container, PlaceholderResolver resolver) {
         this.name = name;
         this.value = value;
+        this.container = container;
         this.resolver = resolver;
     }
 
@@ -29,8 +32,13 @@ class StringProperty implements Property {
     }
 
     @Override
+    public String rawValue() {
+        return value;
+    }
+
+    @Override
     public String asString() {
-        return resolver.resolve(value);
+        return resolver.resolve(value, container);
     }
 
     @Override
@@ -61,3 +69,4 @@ class StringProperty implements Property {
         throw new UnsupportedOperationException();
     }
 }
+

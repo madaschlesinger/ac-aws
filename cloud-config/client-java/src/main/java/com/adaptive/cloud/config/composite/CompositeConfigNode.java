@@ -2,6 +2,8 @@ package com.adaptive.cloud.config.composite;
 
 import com.adaptive.cloud.config.ConfigNode;
 import com.adaptive.cloud.config.Property;
+import com.adaptive.cloud.config.file.PlaceholderResolver;
+import com.adaptive.cloud.config.file.StringProperty;
 import com.google.common.base.Function;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Lists;
@@ -27,18 +29,20 @@ import java.util.*;
 class CompositeConfigNode implements ConfigNode {
     private final ConfigNode parent;
     private final List<ConfigNode> nodes;
+    private PlaceholderResolver resolver;
 
-    private CompositeConfigNode(ConfigNode parent, List<ConfigNode> nodes) {
+    private CompositeConfigNode(ConfigNode parent, List<ConfigNode> nodes, PlaceholderResolver resolver) {
         this.parent = parent;
         this.nodes = nodes;
+        this.resolver = resolver;
     }
 
-    static CompositeConfigNode createRoot() {
-        return new CompositeConfigNode(null, new ArrayList<ConfigNode>());
+    static CompositeConfigNode createRoot(PlaceholderResolver resolver) {
+        return new CompositeConfigNode(null, new ArrayList<ConfigNode>(), resolver);
     }
 
     private CompositeConfigNode createChild(List<ConfigNode> nodes) {
-        return new CompositeConfigNode(this, nodes);
+        return new CompositeConfigNode(this, nodes, resolver);
     }
 
     @Override
@@ -94,7 +98,8 @@ class CompositeConfigNode implements ConfigNode {
         Map<String, Property> properties = new HashMap<>();
         for (ConfigNode node : Lists.reverse(nodes)) {
             for (Property property : node.properties()) {
-                properties.put(property.name(), property);
+                StringProperty compositeProperty = new StringProperty(property.name(), property.rawValue(), this, resolver);
+                properties.put(property.name(), compositeProperty);
             }
         }
         return properties;

@@ -15,6 +15,7 @@ import java.util.List;
  */
 public interface Property {
 	String name();
+	String rawValue();
 	String asString();
 	Boolean asBoolean();
 	Integer asInteger();
