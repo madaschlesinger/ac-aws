@@ -1,0 +1,15 @@
+{
+  "id": "jenkins6",
+  "cpus": 0.5,
+  "mem": 400.0,
+  "container": {
+    "type": "DOCKER",
+    "docker": {
+      "image": "jenkins",
+      "network": "BRIDGE",
+      "portMappings": [
+        { "containerPort": 8080, "hostPort": 0 }
+      ]
+    }
+  }
+}
