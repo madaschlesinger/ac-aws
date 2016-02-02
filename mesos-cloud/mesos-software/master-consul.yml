@@ -5,7 +5,7 @@
   gather_facts: True
 
   vars:
-   weave_host: "master"
+   consul_UI: "false"
 
   tasks:
 
