@@ -12,6 +12,12 @@
 
     - template: src="templates/mesos.zk.j2" dest="/etc/mesos/zk"
     - template: src="templates/external_ip.j2" dest="/etc/mesos-slave/hostname"
+    - name: Create file
+      command: touch /etc/mesos-slave/containerizers
+      args:
+       creates: /etc/mesos-slave/containerizers
+    #- file: path=/etc/mesos-slave/containerizers state=file owner=ec2-user mode=0644
+    - lineinfile: dest=/etc/mesos-slave/containerizers state=present line="docker,mesos"
     - service : name=mesos-slave state=restarted enabled=yes
 
     - name: Recap
