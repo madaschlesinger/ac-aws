@@ -1,0 +1,31 @@
+---
+
+    - name: Install Mesos
+      yum: pkg={{item}} state=latest update_cache=yes
+      with_items:
+      - unzip
+
+
+    - name: Get Consul executable
+      get_url: url=https://releases.hashicorp.com/consul/0.6.3/consul_0.6.3_linux_amd64.zip dest=/tmp
+
+    - unarchive: src=/tmp/consul_0.6.3_linux_amd64.zip dest=/usr/local/bin copy=no
+
+    - file: path=/usr/local/bin/consul owner=ec2-user mode=0744
+
+    - file: path=/opt/consul_data state=directory mode=0744
+
+    - name: Run Consul Agent
+      command: /usr/local/bin/consul agent -data-dir /opt/consul_data
+
+    - name: Setup optional Consul UI
+      get_url: url=https://releases.hashicorp.com/consul/0.6.3/consul_0.6.3_web_ui.zip dest=/tmp
+      when: consul_UI == "true"
+
+    - name: Uncompress options Consul UI
+      unarchive: src=/tmp/consul_0.6.3_web_ui.zip dest=/opt
+      when: consul_UI == "true"
+
+    - name: Start UI
+      command: consul agent -ui
+      when: consul_UI == "true"
