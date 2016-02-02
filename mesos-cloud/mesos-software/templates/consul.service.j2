@@ -1,0 +1,14 @@
+# {{ansible_managed}}
+
+[Unit]
+Description=ConsulAgent
+After=network.target
+Wants=network.target
+
+[Service]
+ExecStart=/usr/local/bin/consul agent -data-dir /opt/consul_data -bind={{ ansible_eth0["ipv4"]["address"] }} -config-dir /etc/consul.d/client
+Restart=always
+RestartSec=20
+
+[Install]
+WantedBy=multi-user.target
