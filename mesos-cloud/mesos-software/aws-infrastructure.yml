@@ -36,10 +36,11 @@
           from_port: 5051
           to_port: 5051
           cidr_ip: 0.0.0.0/0
+        - proto: tcp
+          from_port: 8500
+          to_port: 8500
+          cidr_ip: 0.0.0.0/0 
           
-
-
-
 
   - name: Provision a set of instances for Mesos-Marathon Masters
     ec2:
