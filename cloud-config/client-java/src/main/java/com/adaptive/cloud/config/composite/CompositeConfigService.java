@@ -2,6 +2,7 @@ package com.adaptive.cloud.config.composite;
 
 import com.adaptive.cloud.config.ConfigNode;
 import com.adaptive.cloud.config.ConfigService;
+import com.adaptive.cloud.config.Property;
 import com.adaptive.cloud.config.file.PlaceholderResolver;
 
 import java.util.Arrays;
@@ -32,6 +33,7 @@ public class CompositeConfigService implements ConfigService {
 
 	public CompositeConfigService(ConfigService... services) {
 		PlaceholderResolver resolver = new PlaceholderResolver();
+		resolver.registerSource(this);
 		this.services = Arrays.asList(services);
 		this.root = CompositeConfigNode.createRoot(resolver);
 		for (ConfigService service : services) {

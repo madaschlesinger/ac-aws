@@ -24,5 +24,4 @@ public interface ConfigService extends AutoCloseable {
 	 * </p>
 	 */
 	ConfigNode root();
-	
 }

@@ -4,9 +4,11 @@ import com.adaptive.cloud.config.ConfigNode;
 import com.adaptive.cloud.config.ConfigService;
 import com.adaptive.cloud.config.Property;
 import com.adaptive.cloud.config.UnresolvedPlaceholderException;
+import com.google.common.base.Splitter;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -62,17 +64,45 @@ public class PlaceholderResolver {
     }
 
     private String findProperty(String name, ConfigNode currentNode) {
-        Property property = currentNode.property(name);
+        Property property = findOnCurrentNode(name, currentNode);
+        property = (property != null) ?  property : findInHierarchy(name);
+
         if (property != null) {
             return property.asString();
         } else {
-            for (ConfigService source : sources) {
-                Property value = source.root().property(name);
-                if (value != null) {
-                    return value.asString();
+            throw new UnresolvedPlaceholderException(name);
+        }
+    }
+
+    public Property findInHierarchy2(ConfigService source, String path) {
+        ConfigNode node = source.root();
+        String element = "";
+
+        Iterator<String> elements = Splitter.on(".").trimResults().split(path).iterator();
+        while (elements.hasNext()) {
+            element = elements.next();
+            if (elements.hasNext()) {
+                node = node.child(element);
+                if (node == null) {
+                    return null;
                 }
             }
         }
-        throw new UnresolvedPlaceholderException(name);
+        return node.property(element);
+    }
+
+
+    private Property findInHierarchy(String name) {
+        for (ConfigService source : sources) {
+            Property value = findInHierarchy2(source, name);
+            if (value != null) {
+                return value;
+            }
+        }
+        return null;
+    }
+
+    private Property findOnCurrentNode(String name, ConfigNode currentNode) {
+        return currentNode.property(name);
     }
 }
