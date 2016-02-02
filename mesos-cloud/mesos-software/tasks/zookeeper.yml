@@ -12,4 +12,3 @@
       template: src=../templates/zookeeper.cfg.j2 dest=/etc/zookeeper/conf/zoo.cfg
 
     - service : name=zookeeper state=started enabled=yes
-    - service : name=mesos-master state=started enabled=yes

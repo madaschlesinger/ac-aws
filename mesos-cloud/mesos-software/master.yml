@@ -14,6 +14,8 @@
 
     - include: tasks/mesos.yml
 
+    - service : name=mesos-master state=started enabled=yes
+
     - name: Recap
       debug: var=hostvars[inventory_hostname]
 
