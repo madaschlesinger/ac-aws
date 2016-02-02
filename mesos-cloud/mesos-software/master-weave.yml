@@ -1,0 +1,32 @@
+---
+- hosts: tag_Name_Mesos_Master
+  sudo: yes
+  remote_user: ec2-user
+  gather_facts: True
+
+  vars:
+   weave_host: "master"
+
+  tasks:
+
+    - include: tasks/rpms.yml
+
+    - include: tasks/zookeeper.yml
+
+    - include: tasks/mesos.yml
+
+    - include: tasks/docker.yml
+
+    - include: tasks/weave.yml
+ 
+    - include: tasks/marathon.yml
+
+
+    - name: Recap
+      debug: var=hostvars[inventory_hostname]
+
+    - name: Instructions Mesos
+      debug: msg="Login into Mesos Console http://{{ ec2_dns_name }}:5050"
+
+    - name: Instructions Marathon
+      debug: msg="Login into Marathon Console http://{{ ec2_dns_name }}:8080"

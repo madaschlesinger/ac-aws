@@ -1,0 +1,12 @@
+---
+
+    - template: src=repo/docker.repo dest=/etc/yum.repos.d/docker.repo
+
+
+    - name: Install Docker
+      yum: pkg={{item}} state=latest update_cache=yes
+      with_items:
+      - docker-engine
+
+    - service : name=docker state=started enabled=yes
+

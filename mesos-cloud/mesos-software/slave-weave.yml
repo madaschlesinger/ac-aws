@@ -1,0 +1,26 @@
+---
+- hosts: tag_Name_Mesos_Slave
+  sudo: yes
+  remote_user: ec2-user
+  gather_facts: True
+
+  vars:
+   weave_host: "slave"
+
+  tasks:
+
+    - include: tasks/rpms.yml
+
+    - include: tasks/mesos.yml
+
+    - include: tasks/docker.yml
+
+    - include: tasks/weave.yml
+
+    - template: src="templates/mesos.zk.j2" dest="/etc/mesos/zk"
+    - template: src="templates/external_ip.j2" dest="/etc/mesos-slave/hostname"
+    - service : name=mesos-slave state=restarted enabled=yes
+
+
+    - name: Recap
+      debug: var=hostvars[inventory_hostname]

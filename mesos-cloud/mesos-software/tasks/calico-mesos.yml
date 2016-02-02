@@ -1,0 +1,16 @@
+---
+
+    - name: Install Calico-Mesos 
+      yum: pkg={{item}} state=latest update_cache=yes
+      with_items:
+      - epel-release
+      - wget
+
+    - name: Get Calico Mesos tar file
+      get_url: url=https://github.com/projectcalico/calico-mesos/releases/download/v0.1.3/calico-mesos-rpms.tar dest=/tmp
+
+    - shell: tar -xvf /tmp/calico-mesos-rpms.tar
+
+    - shell: yum install -y --skip-broken /home/ec2-user/calico-mesos-rpms/*.rpm
+
+    - service: name=calico-mesos state=started enabled=yes

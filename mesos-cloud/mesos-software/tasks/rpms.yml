@@ -2,6 +2,7 @@
 
     - copy: src="rpms/cloudera-cdh-4-0.x86_64.rpm" dest=/tmp/
     - copy: src="rpms/mesosphere-el-repo-7-1.noarch.rpm" dest="/tmp"
+    - copy: src="rpms/epel-release-latest-7.noarch.rpm" dest="/tmp"
 
     - name: Check if Mesosphere EPEL Repo is installed
       command: rpm -q mesosphere-el-repo-7-1
@@ -22,3 +23,14 @@
     - name: Execute script if mesosphere is not installed
       command: rpm -Uvh /tmp/cloudera-cdh-4-0.x86_64.rpm
       when: rpm_check_zookeeper_repo.stdout.find('is not installed') != -1
+ 
+    - name: Check if RedHat7 EPEL Repo is installed
+      command: rpm -q  epel-release
+      register: rpm_check_redhat_repo
+      failed_when: false
+      changed_when: false
+
+    - name: Execute script if RH7 EPEL is not installed
+      command: rpm -Uvh /tmp/epel-release-latest-7.noarch.rpm
+      when: rpm_check_redhat_repo.stdout.find('is not installed') != -1
+    
