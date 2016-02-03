@@ -60,5 +60,10 @@ public class FileConfigServiceTest {
     public void itShould_ThrowExceptionWhenPlaceholderNotKnown() throws Exception {
         root.child("node").property("unresolvable").asString();
     }
+
+    @Test(expected=CircularPlaceholderException.class)
+    public void itShould_ThrowExceptionWhenPlaceholderCreateInfiniteRecursion() throws Exception {
+        root.child("node").property("circular").asString();
+    }
 }
 

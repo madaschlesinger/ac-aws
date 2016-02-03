@@ -42,8 +42,6 @@ public class FileConfigService implements ConfigService {
 	 * @param url	The URL of the file to load
 	 */
 	public static FileConfigService fromProperties(String node, URL url) throws Exception {
-		// TODO - Currently this interface implies that each service has only one node.  We should
-		// be able to registerSource nodes to an existing service
 		FileConfigService service = new FileConfigService();
 		ConfigNodeImpl configNode = service.root.addChild(node);
 		addProperties(url, configNode);

@@ -1,9 +1,6 @@
 package com.adaptive.cloud.config.file;
 
-import com.adaptive.cloud.config.ConfigNode;
-import com.adaptive.cloud.config.ConfigService;
-import com.adaptive.cloud.config.Property;
-import com.adaptive.cloud.config.UnresolvedPlaceholderException;
+import com.adaptive.cloud.config.*;
 import com.google.common.base.Splitter;
 
 import java.util.ArrayList;
@@ -19,7 +16,6 @@ import java.util.regex.Pattern;
  * only on the sources which have been registered.
  * </p>
  * @author Spencer Ward
- * TODO: Handle infinite recursion in property resolution
  */
 public class PlaceholderResolver {
     private Collection<ConfigService> sources = new ArrayList<>();
@@ -48,58 +44,78 @@ public class PlaceholderResolver {
      * @throws UnresolvedPlaceholderException if the placeholder cannot be found in the registered property sources
      */
     public String resolve(String propertyValue, ConfigNode currentNode) {
-        return replacePlaceholders(propertyValue, currentNode);
+        return new Resolution(0, propertyValue, currentNode).evaluate();
     }
 
-    private String replacePlaceholders(String value, ConfigNode currentNode) {
-        Pattern regEx = Pattern.compile("[^$]*\\$\\{([^$]+?)\\}.*");
-        Matcher matcher = regEx.matcher(value);
-        while (matcher.find()) {
-            String placeholder = matcher.group(1);
-            String placeholderValue = findProperty(placeholder, currentNode);
-            value = value.replace("${" + placeholder + "}", placeholderValue);
-            matcher = regEx.matcher(value);
-        }
-        return value;
-    }
+    private class Resolution {
+        private String value;
+        private final ConfigNode currentNode;
+        private final int stackDepth;
 
-    private String findProperty(String name, ConfigNode currentNode) {
-        Property property = findInCurrentNode(name, currentNode);
-        if (property == null) {
-            property = findInHierarchy(name);
+        private Resolution(int stackDepth, String value, ConfigNode currentNode) {
+            if (stackDepth > 10) throw new CircularPlaceholderException(value);
+            this.stackDepth = stackDepth;
+            this.value = value;
+            this.currentNode = currentNode;
         }
 
-        return property.asString();
-    }
+        public String evaluate() {
+            return replacePlaceholders();
+        }
 
-    private Property findInHierarchy(String name) {
-        for (ConfigService source : sources) {
-            Property value = findInService(source, name);
-            if (value != null) {
-                return value;
+        private String replacePlaceholders() {
+            Pattern regEx = Pattern.compile("[^$]*\\$\\{([^$]+?)\\}.*");
+            Matcher matcher = regEx.matcher(value);
+            while (matcher.find()) {
+                String placeholder = matcher.group(1);
+                String placeholderValue = findProperty(placeholder);
+                value = value.replace("${" + placeholder + "}", placeholderValue);
+                matcher = regEx.matcher(value);
             }
+            return value;
         }
-        throw new UnresolvedPlaceholderException(name);
-    }
 
-    public Property findInService(ConfigService source, String path) {
-        ConfigNode node = source.root();
-        String element = "";
+        private String findProperty(String name) {
+            Property property = findInCurrentNode(name);
+            if (property == null) {
+                property = findInHierarchy(name);
+            }
 
-        Iterator<String> elements = Splitter.on(".").trimResults().split(path).iterator();
-        while (elements.hasNext()) {
-            element = elements.next();
-            if (elements.hasNext()) {
-                node = node.child(element);
-                if (node == null) {
-                    return null;
+            String rawValue = property.rawValue();
+            return new Resolution(stackDepth + 1, rawValue, currentNode).evaluate();
+        }
+
+        private Property findInHierarchy(String name) {
+            for (ConfigService source : sources) {
+                Property value = findInService(source, name);
+                if (value != null) {
+                    return value;
                 }
             }
+            throw new UnresolvedPlaceholderException(name);
         }
-        return node.property(element);
+
+        public Property findInService(ConfigService source, String path) {
+            ConfigNode node = source.root();
+            String element = "";
+
+            Iterator<String> elements = Splitter.on(".").trimResults().split(path).iterator();
+            while (elements.hasNext()) {
+                element = elements.next();
+                if (elements.hasNext()) {
+                    node = node.child(element);
+                    if (node == null) {
+                        return null;
+                    }
+                }
+            }
+            return node.property(element);
+        }
+
+        private Property findInCurrentNode(String name) {
+            return currentNode.property(name);
+        }
+
     }
 
-    private Property findInCurrentNode(String name, ConfigNode currentNode) {
-        return currentNode.property(name);
-    }
 }
