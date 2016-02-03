@@ -1,3 +1,6 @@
+Mesos Cluster Setup
+============
+
 Instructions to set up a Mesos Cluster
 
 Export those variables:
