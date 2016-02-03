@@ -8,6 +8,8 @@
 
     - include: tasks/rpms.yml
 
+    - include: tasks/docker.yml
+
     - include: tasks/mesos.yml
 
     - template: src="templates/mesos.zk.j2" dest="/etc/mesos/zk"
