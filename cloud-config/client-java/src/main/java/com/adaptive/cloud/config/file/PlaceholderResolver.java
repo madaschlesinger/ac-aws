@@ -64,17 +64,25 @@ public class PlaceholderResolver {
     }
 
     private String findProperty(String name, ConfigNode currentNode) {
-        Property property = findOnCurrentNode(name, currentNode);
-        property = (property != null) ?  property : findInHierarchy(name);
-
-        if (property != null) {
-            return property.asString();
-        } else {
-            throw new UnresolvedPlaceholderException(name);
+        Property property = findInCurrentNode(name, currentNode);
+        if (property == null) {
+            property = findInHierarchy(name);
         }
+
+        return property.asString();
     }
 
-    public Property findInHierarchy2(ConfigService source, String path) {
+    private Property findInHierarchy(String name) {
+        for (ConfigService source : sources) {
+            Property value = findInService(source, name);
+            if (value != null) {
+                return value;
+            }
+        }
+        throw new UnresolvedPlaceholderException(name);
+    }
+
+    public Property findInService(ConfigService source, String path) {
         ConfigNode node = source.root();
         String element = "";
 
@@ -91,18 +99,7 @@ public class PlaceholderResolver {
         return node.property(element);
     }
 
-
-    private Property findInHierarchy(String name) {
-        for (ConfigService source : sources) {
-            Property value = findInHierarchy2(source, name);
-            if (value != null) {
-                return value;
-            }
-        }
-        return null;
-    }
-
-    private Property findOnCurrentNode(String name, ConfigNode currentNode) {
+    private Property findInCurrentNode(String name, ConfigNode currentNode) {
         return currentNode.property(name);
     }
 }
