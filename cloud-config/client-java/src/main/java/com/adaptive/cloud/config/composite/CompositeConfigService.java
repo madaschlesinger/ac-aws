@@ -2,8 +2,11 @@ package com.adaptive.cloud.config.composite;
 
 import com.adaptive.cloud.config.ConfigNode;
 import com.adaptive.cloud.config.ConfigService;
+import com.adaptive.cloud.config.ConfigServiceClosedException;
 import com.adaptive.cloud.config.Property;
 import com.adaptive.cloud.config.file.PlaceholderResolver;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,12 +29,22 @@ import java.util.List;
  * config.merge(databaseConfig);
  * </pre>
  * @author Kevin Seal
+ * @author Spencer Ward
  */
 public class CompositeConfigService implements ConfigService {
-	private List<ConfigService> services;
-	private CompositeConfigNode root;
+	private final List<ConfigService> services;
+	private final CompositeConfigNode root;
 
-	public CompositeConfigService(ConfigService... services) {
+
+	/**
+	 * Factory method that creates a composite of the given configuration services.
+	 * @param services The services to aggregate, in descending priority order
+	 */
+	public static CompositeConfigService of(ConfigService... services) {
+		return new CompositeConfigService(services);
+	}
+
+	private CompositeConfigService(ConfigService... services) {
 		PlaceholderResolver resolver = new PlaceholderResolver();
 		resolver.registerSource(this);
 		this.services = Arrays.asList(services);
@@ -56,15 +69,21 @@ public class CompositeConfigService implements ConfigService {
 	}
 
 	@Override
+	public boolean isOpen() {
+		return Iterables.all(services, new Predicate<ConfigService>() {
+			public boolean apply(ConfigService configService) {
+				return configService.isOpen();
+			}
+		});
+	}
+
+	@Override
 	public ConfigNode root() {
+		ensureOpen();
 		return root;
 	}
 
-	/**
-	 * Convenience method that creates a composite of the given configuration services.
-	 * @param services The services to aggregate, in descending priority order
-	 */
-	public static CompositeConfigService of(ConfigService... services) {
-		return new CompositeConfigService(services);
+	private void ensureOpen() {
+		if (!isOpen()) throw new ConfigServiceClosedException();
 	}
 }

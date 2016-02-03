@@ -48,7 +48,6 @@ public interface ConfigNode {
 	 * Note that this <em>won't</em> traverse the config hierarchy to find properties in child nodes, even if the name
 	 * of the requested property <em>suggests</em> that the property is in a child node, eg. {@code database.username}.
 	 * </p>
-	 * TODO - Perhaps this SHOULD traverse hierarchy.  Especially if it is the root node.
 	 */
 	Property property(String name);
 }

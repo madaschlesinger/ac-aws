@@ -1,5 +1,6 @@
 package com.adaptive.cloud.config;
 
+import com.adaptive.cloud.config.composite.CompositeConfigService;
 import com.adaptive.cloud.config.file.FileConfigService;
 import org.hamcrest.CoreMatchers;
 import org.junit.Before;
@@ -13,11 +14,27 @@ import static org.junit.Assert.assertThat;
 
 public class FileConfigServiceTest {
     private ConfigNode root;
+    private URL fileUrl;
 
     @Before
     public void before() throws Exception {
-        URL fileUrl = getClass().getClassLoader().getResource("test.properties");
+        fileUrl = getClass().getClassLoader().getResource("test.properties");
         ConfigService service = FileConfigService.fromProperties("node", fileUrl);
+        service.open();
+        root = service.root();
+    }
+
+    @Test(expected=ConfigServiceClosedException.class)
+    public void itShould_ThrowAnExceptionIfAccessedWithoutOpening() throws Exception {
+        ConfigService service = FileConfigService.fromProperties("node", fileUrl);
+        root = service.root();
+    }
+
+    @Test(expected=ConfigServiceClosedException.class)
+    public void itShould_ThrowAnExceptionIfAccessedAfterClosing() throws Exception {
+        ConfigService service = FileConfigService.fromProperties("node", fileUrl);
+        service.open();
+        service.close();
         root = service.root();
     }
 
@@ -59,6 +76,11 @@ public class FileConfigServiceTest {
     @Test(expected=UnresolvedPlaceholderException.class)
     public void itShould_ThrowExceptionWhenPlaceholderNotKnown() throws Exception {
         root.child("node").property("unresolvable").asString();
+    }
+
+    @Test(expected=CircularPlaceholderException.class)
+    public void itShould_ThrowExceptionWhenPlaceholderCreateInfiniteRecursion() throws Exception {
+        root.child("node").property("circular").asString();
     }
 }
 

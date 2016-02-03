@@ -2,6 +2,7 @@ package com.adaptive.cloud.config.file;
 
 import com.adaptive.cloud.config.ConfigNode;
 import com.adaptive.cloud.config.ConfigService;
+import com.adaptive.cloud.config.ConfigServiceClosedException;
 import com.adaptive.cloud.config.Property;
 import com.google.common.base.Splitter;
 
@@ -28,26 +29,25 @@ import java.util.regex.Pattern;
  * @author Spencer Ward
  */
 public class FileConfigService implements ConfigService {
-	private ConfigNodeImpl root;
+	private final ConfigNodeImpl root;
+	private boolean isOpen = false;
+
+	/**
+	 * Creates a new instance of a configuration service whose data is loaded into a single from a file in Java Properties file format.
+	 * @param node	The node to put the data in - cannot be {@code null}
+	 * @param url	The URL of the file to load
+	 */
+	public static FileConfigService fromProperties(String node, URL url) throws IOException {
+		FileConfigService service = new FileConfigService();
+		ConfigNodeImpl configNode = service.root.addChild(node);
+		addProperties(url, configNode);
+		return service;
+	}
 
 	private FileConfigService() {
 		PlaceholderResolver resolver = new PlaceholderResolver();
 		resolver.registerSource(this);
 		this.root = ConfigNodeImpl.createRoot(resolver);
-	}
-
-	/**
-	 * Creates a new instance of a configuration service whose data is loaded into a single from a file in Java Properties file format.
-	 * @param node	The node to put the data in - cannot be {@code null}  
-	 * @param url	The URL of the file to load
-	 */
-	public static FileConfigService fromProperties(String node, URL url) throws Exception {
-		// TODO - Currently this interface implies that each service has only one node.  We should
-		// be able to registerSource nodes to an existing service
-		FileConfigService service = new FileConfigService();
-		ConfigNodeImpl configNode = service.root.addChild(node);
-		addProperties(url, configNode);
-		return service;
 	}
 
 	private static void addProperties(URL url, ConfigNodeImpl configNode) throws IOException {
@@ -69,16 +69,28 @@ public class FileConfigService implements ConfigService {
 	@Override
 	public void close() throws Exception {
 		// Nothing to close really
+		isOpen = false;
 	}
 
 	@Override
 	public void open() throws Exception {
 		// Nothing to open - files were loaded when they were added
+		isOpen = true;
+	}
+
+	@Override
+	public boolean isOpen() {
+		return isOpen;
 	}
 
 	@Override
 	public ConfigNode root() {
+		ensureOpen();
 		return root;
+	}
+
+	private void ensureOpen() {
+		if (!isOpen) throw new ConfigServiceClosedException();
 	}
 
 
