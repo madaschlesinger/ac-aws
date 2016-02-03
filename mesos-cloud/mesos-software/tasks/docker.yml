@@ -8,5 +8,7 @@
       with_items:
       - docker-engine
 
+    - user: name=ec2-user groups=docker append=yes
+
     - service : name=docker state=started enabled=yes
 
