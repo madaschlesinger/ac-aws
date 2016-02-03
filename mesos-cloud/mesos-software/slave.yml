@@ -1,5 +1,5 @@
 ---
-- hosts: tag_Name_Mesos_Slave
+- hosts: '{{ hosts }}'
   sudo: yes
   remote_user: ec2-user
   gather_facts: True

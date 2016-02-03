@@ -1,10 +1,14 @@
 ---
-- hosts: "tag_Name_Mesos_Master-{{ ansible_user_id }}-{{ flavour }}"
+- hosts: all
   sudo: yes
   remote_user: ec2-user
   gather_facts: True
 
   tasks:
+
+    #- name: get the current time for a timestamp
+    #  command: hostname
+    #  register: master
 
     - include: tasks/rpms.yml
 
