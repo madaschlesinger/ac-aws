@@ -10,7 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * A means of resolving placeholders within a property value by looking within other configuration sources
+ * A means of resolving placeholders within a property propertyValue by looking within other configuration sources
  * <p>
  * This class will evolve to handle intelligent searching for placeholders, but at this stage it looks
  * only on the sources which have been registered.
@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
  * @author Spencer Ward
  */
 public class PlaceholderResolver {
+    public static final int MAXIMUM_STACK_DEPTH = 10;
     private Collection<ConfigService> sources = new ArrayList<>();
 
     /**
@@ -29,9 +30,9 @@ public class PlaceholderResolver {
     }
 
     /**
-     * Given a property value, if the value contains placeholders, these will be replaced by the property values for
+     * Given a property propertyValue, if the propertyValue contains placeholders, these will be replaced by the property values for
      * those placeholders.  Multiple and nested placeholders are also handled. If there are no placeholders in the
-     * given value, it is returned as given.
+     * given propertyValue, it is returned as given.
      * <p>
      * Examples:
      * <pre>
@@ -39,8 +40,8 @@ public class PlaceholderResolver {
      * ${name-${id}}
      * </pre>
      * </p>
-     * @param propertyValue the value for the property (which may include placeholders)
-     * @return the resolved value for the property
+     * @param propertyValue the propertyValue for the property (which may include placeholders)
+     * @return the resolved propertyValue for the property
      * @throws UnresolvedPlaceholderException if the placeholder cannot be found in the registered property sources
      */
     public String resolve(String propertyValue, ConfigNode currentNode) {
@@ -48,31 +49,28 @@ public class PlaceholderResolver {
     }
 
     private class Resolution {
-        private String value;
+        private final String propertyValue;
         private final ConfigNode currentNode;
         private final int stackDepth;
 
-        private Resolution(int stackDepth, String value, ConfigNode currentNode) {
-            if (stackDepth > 10) throw new CircularPlaceholderException(value);
+        private Resolution(int stackDepth, String propertyValue, ConfigNode currentNode) {
+            if (stackDepth > MAXIMUM_STACK_DEPTH) throw new CircularPlaceholderException(propertyValue);
             this.stackDepth = stackDepth;
-            this.value = value;
+            this.propertyValue = propertyValue;
             this.currentNode = currentNode;
         }
 
         public String evaluate() {
-            return replacePlaceholders();
-        }
-
-        private String replacePlaceholders() {
             Pattern regEx = Pattern.compile("[^$]*\\$\\{([^$]+?)\\}.*");
-            Matcher matcher = regEx.matcher(value);
+            Matcher matcher = regEx.matcher(propertyValue);
+            String resolvedValue = propertyValue;
             while (matcher.find()) {
                 String placeholder = matcher.group(1);
                 String placeholderValue = findProperty(placeholder);
-                value = value.replace("${" + placeholder + "}", placeholderValue);
-                matcher = regEx.matcher(value);
+                resolvedValue = resolvedValue.replace("${" + placeholder + "}", placeholderValue);
+                matcher = regEx.matcher(resolvedValue);
             }
-            return value;
+            return resolvedValue;
         }
 
         private String findProperty(String name) {
@@ -85,9 +83,13 @@ public class PlaceholderResolver {
             return new Resolution(stackDepth + 1, rawValue, currentNode).evaluate();
         }
 
+        private Property findInCurrentNode(String name) {
+            return currentNode.property(name);
+        }
+
         private Property findInHierarchy(String name) {
-            for (ConfigService source : sources) {
-                Property value = findInService(source, name);
+            for (ConfigService service : sources) {
+                Property value = findInService(service, name);
                 if (value != null) {
                     return value;
                 }
@@ -95,8 +97,8 @@ public class PlaceholderResolver {
             throw new UnresolvedPlaceholderException(name);
         }
 
-        public Property findInService(ConfigService source, String path) {
-            ConfigNode node = source.root();
+        public Property findInService(ConfigService service, String path) {
+            ConfigNode node = service.root();
             String element = "";
 
             Iterator<String> elements = Splitter.on(".").trimResults().split(path).iterator();
@@ -111,11 +113,5 @@ public class PlaceholderResolver {
             }
             return node.property(element);
         }
-
-        private Property findInCurrentNode(String name) {
-            return currentNode.property(name);
-        }
-
     }
-
 }
