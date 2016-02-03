@@ -1,7 +1,7 @@
 ---
 - hosts: localhost
   connection: local
-  gather_facts: False
+  gather_facts: True
 
   tasks:
 
@@ -44,7 +44,7 @@
 
   - name: Provision a set of instances for Mesos-Marathon Masters
     ec2:
-      key_name: cristian
+      key_name: "{{ ansible_user_id }}"
       instance_type: t2.micro
       image: "ami-8b8c57f8"
       group: "Mesos-SG"
@@ -52,9 +52,9 @@
       region: "eu-west-1"
       exact_count: 1
       count_tag:
-         Name: Mesos-Master
+         Name: "Mesos-Master-{{ ansible_user_id }}-{{ flavour }}"
       instance_tags:
-         Name: Mesos-Master
+         Name: "Mesos-Master-{{ ansible_user_id }}-{{ flavour }}"
       user_data: |
          #!/bin/bash 
          echo "Defaults:ec2-user !requiretty" > /etc/sudoers.d/disable_requiretty
@@ -66,7 +66,7 @@
 
   - name: Provision a set of instances for Mesos Slaves
     ec2:
-      key_name: cristian
+      key_name: "{{ ansible_user_id }}"
       instance_type: t2.micro
       image: "ami-8b8c57f8"
       group: "Mesos-SG"
@@ -74,9 +74,9 @@
       region: "eu-west-1"
       exact_count: 1
       count_tag:
-         Name: Mesos-Slave
+         Name: "Mesos-Slave-{{ ansible_user_id }}-{{ flavour }}"
       instance_tags:
-         Name: Mesos-Slave
+         Name: "Mesos-Slave-{{ ansible_user_id }}-{{ flavour }}"
       user_data: |
          #!/bin/bash 
          echo "Defaults:ec2-user !requiretty" > /etc/sudoers.d/disable_requiretty
