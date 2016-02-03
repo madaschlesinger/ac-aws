@@ -29,12 +29,22 @@ import java.util.List;
  * config.merge(databaseConfig);
  * </pre>
  * @author Kevin Seal
+ * @author Spencer Ward
  */
 public class CompositeConfigService implements ConfigService {
-	private List<ConfigService> services;
-	private CompositeConfigNode root;
+	private final List<ConfigService> services;
+	private final CompositeConfigNode root;
 
-	public CompositeConfigService(ConfigService... services) {
+
+	/**
+	 * Factory method that creates a composite of the given configuration services.
+	 * @param services The services to aggregate, in descending priority order
+	 */
+	public static CompositeConfigService of(ConfigService... services) {
+		return new CompositeConfigService(services);
+	}
+
+	private CompositeConfigService(ConfigService... services) {
 		PlaceholderResolver resolver = new PlaceholderResolver();
 		resolver.registerSource(this);
 		this.services = Arrays.asList(services);
@@ -75,13 +85,5 @@ public class CompositeConfigService implements ConfigService {
 
 	private void ensureOpen() {
 		if (!isOpen()) throw new ConfigServiceClosedException();
-	}
-
-	/**
-	 * Convenience method that creates a composite of the given configuration services.
-	 * @param services The services to aggregate, in descending priority order
-	 */
-	public static CompositeConfigService of(ConfigService... services) {
-		return new CompositeConfigService(services);
 	}
 }

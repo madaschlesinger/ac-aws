@@ -10,10 +10,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * A means of resolving placeholders within a property propertyValue by looking within other configuration sources
+ * A means of resolving placeholders within a property value by looking within other configuration services.
  * <p>
- * This class will evolve to handle intelligent searching for placeholders, but at this stage it looks
- * only on the sources which have been registered.
+ * The resolution strategy is as follows:
+ * <ol>
+ *     <li>Look in the same node as the property whose placeholders are being resolved</li>
+ *     <li>Look in the registered configuration services, in the order they were registered</li>
+ * </ol>
  * </p>
  * @author Spencer Ward
  */

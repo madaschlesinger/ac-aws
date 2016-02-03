@@ -29,25 +29,25 @@ import java.util.regex.Pattern;
  * @author Spencer Ward
  */
 public class FileConfigService implements ConfigService {
-	private ConfigNodeImpl root;
+	private final ConfigNodeImpl root;
 	private boolean isOpen = false;
+
+	/**
+	 * Creates a new instance of a configuration service whose data is loaded into a single from a file in Java Properties file format.
+	 * @param node	The node to put the data in - cannot be {@code null}
+	 * @param url	The URL of the file to load
+	 */
+	public static FileConfigService fromProperties(String node, URL url) throws IOException {
+		FileConfigService service = new FileConfigService();
+		ConfigNodeImpl configNode = service.root.addChild(node);
+		addProperties(url, configNode);
+		return service;
+	}
 
 	private FileConfigService() {
 		PlaceholderResolver resolver = new PlaceholderResolver();
 		resolver.registerSource(this);
 		this.root = ConfigNodeImpl.createRoot(resolver);
-	}
-
-	/**
-	 * Creates a new instance of a configuration service whose data is loaded into a single from a file in Java Properties file format.
-	 * @param node	The node to put the data in - cannot be {@code null}  
-	 * @param url	The URL of the file to load
-	 */
-	public static FileConfigService fromProperties(String node, URL url) throws Exception {
-		FileConfigService service = new FileConfigService();
-		ConfigNodeImpl configNode = service.root.addChild(node);
-		addProperties(url, configNode);
-		return service;
 	}
 
 	private static void addProperties(URL url, ConfigNodeImpl configNode) throws IOException {

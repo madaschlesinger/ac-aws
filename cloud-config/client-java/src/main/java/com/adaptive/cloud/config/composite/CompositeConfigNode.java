@@ -29,7 +29,7 @@ import java.util.*;
 class CompositeConfigNode implements ConfigNode {
     private final ConfigNode parent;
     private final List<ConfigNode> nodes;
-    private PlaceholderResolver resolver;
+    private final PlaceholderResolver resolver;
 
     private CompositeConfigNode(ConfigNode parent, List<ConfigNode> nodes, PlaceholderResolver resolver) {
         this.parent = parent;
