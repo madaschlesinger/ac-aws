@@ -2,8 +2,11 @@ package com.adaptive.cloud.config.composite;
 
 import com.adaptive.cloud.config.ConfigNode;
 import com.adaptive.cloud.config.ConfigService;
+import com.adaptive.cloud.config.ConfigServiceClosedException;
 import com.adaptive.cloud.config.Property;
 import com.adaptive.cloud.config.file.PlaceholderResolver;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 
 import java.util.Arrays;
 import java.util.List;
@@ -56,8 +59,22 @@ public class CompositeConfigService implements ConfigService {
 	}
 
 	@Override
+	public boolean isOpen() {
+		return Iterables.all(services, new Predicate<ConfigService>() {
+			public boolean apply(ConfigService configService) {
+				return configService.isOpen();
+			}
+		});
+	}
+
+	@Override
 	public ConfigNode root() {
+		ensureOpen();
 		return root;
+	}
+
+	private void ensureOpen() {
+		if (!isOpen()) throw new ConfigServiceClosedException();
 	}
 
 	/**

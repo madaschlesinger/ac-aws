@@ -2,6 +2,7 @@ package com.adaptive.cloud.config.file;
 
 import com.adaptive.cloud.config.ConfigNode;
 import com.adaptive.cloud.config.ConfigService;
+import com.adaptive.cloud.config.ConfigServiceClosedException;
 import com.adaptive.cloud.config.Property;
 import com.google.common.base.Splitter;
 
@@ -29,6 +30,7 @@ import java.util.regex.Pattern;
  */
 public class FileConfigService implements ConfigService {
 	private ConfigNodeImpl root;
+	private boolean isOpen = false;
 
 	private FileConfigService() {
 		PlaceholderResolver resolver = new PlaceholderResolver();
@@ -67,16 +69,28 @@ public class FileConfigService implements ConfigService {
 	@Override
 	public void close() throws Exception {
 		// Nothing to close really
+		isOpen = false;
 	}
 
 	@Override
 	public void open() throws Exception {
 		// Nothing to open - files were loaded when they were added
+		isOpen = true;
+	}
+
+	@Override
+	public boolean isOpen() {
+		return isOpen;
 	}
 
 	@Override
 	public ConfigNode root() {
+		ensureOpen();
 		return root;
+	}
+
+	private void ensureOpen() {
+		if (!isOpen) throw new ConfigServiceClosedException();
 	}
 
 

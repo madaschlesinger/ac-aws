@@ -3,7 +3,6 @@ package com.adaptive.cloud.config;
 import com.adaptive.cloud.config.composite.CompositeConfigService;
 import com.google.common.collect.ImmutableList;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -11,8 +10,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Collections;
 
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.hamcrest.core.Is.is;
@@ -35,6 +32,8 @@ public class CompositeConfigServiceTest {
     public void before() {
         when(service1.root()).thenReturn(root1);
         when(service2.root()).thenReturn(root2);
+        when(service1.isOpen()).thenReturn(true);
+        when(service2.isOpen()).thenReturn(true);
         when(root1.children()).thenReturn(Collections.singleton(node1));
         when(root2.children()).thenReturn(Collections.singleton(node2));
         when(node1.name()).thenReturn("node1");
@@ -50,33 +49,33 @@ public class CompositeConfigServiceTest {
     }
 
     @Test
-    public void itShould_InitiallyHaveAnEmptyRoot() {
+    public void itShould_InitiallyHaveAnEmptyRoot() throws Exception {
         composite = CompositeConfigService.of();
         assertThat(composite.root().children(), is(empty()));
         assertThat(composite.root().properties(), is(empty()));
     }
 
     @Test
-    public void itShould_HaveAParentlessRoot() {
+    public void itShould_HaveAParentlessRoot() throws Exception {
         composite = CompositeConfigService.of();
         assertThat(composite.root().parent(), is(nullValue()));
     }
 
     @Test
-    public void itShould_HaveAnUnnamedRoot() {
+    public void itShould_HaveAnUnnamedRoot() throws Exception {
         composite = CompositeConfigService.of();
         assertThat(composite.root().name(), is(nullValue()));
     }
 
     @Test
-    public void itShould_HaveTheChildrenOfAddedSource() {
+    public void itShould_HaveTheChildrenOfAddedSource() throws Exception {
         composite = CompositeConfigService.of(service1);
         assertThat(composite.root().children().size(), is(1));
         assertThat(composite.root().child("node1").name(), is("node1"));
     }
 
     @Test
-    public void itShould_HaveTheChildrenOfAllAddedSources() {
+    public void itShould_HaveTheChildrenOfAllAddedSources() throws Exception {
         composite = CompositeConfigService.of(service1, service2);
         assertThat(composite.root().children().size(), is(2));
         assertThat(composite.root().child("node1").name(), is("node1"));
@@ -84,14 +83,15 @@ public class CompositeConfigServiceTest {
     }
 
     @Test
-    public void itShould_ParentTheChildNodesOnTheCompositeRoot() {
+    public void itShould_ParentTheChildNodesOnTheCompositeRoot() throws Exception {
         composite = CompositeConfigService.of(service1, service2);
+        composite.open();
         assertThat(composite.root().child("node1").parent(), is(composite.root()));
         assertThat(composite.root().child("node2").parent(), is(composite.root()));
     }
 
     @Test
-    public void itShould_MergeNodesWithMatchingNames() {
+    public void itShould_MergeNodesWithMatchingNames() throws Exception {
         when(node1.name()).thenReturn("a node");
         when(node2.name()).thenReturn("a node");
         composite = CompositeConfigService.of(service1, service2);
@@ -100,14 +100,14 @@ public class CompositeConfigServiceTest {
     }
 
     @Test
-    public void itShould_ProvideAccessToPropertiesOfComposedServices() {
+    public void itShould_ProvideAccessToPropertiesOfComposedServices() throws Exception {
         composite = CompositeConfigService.of(service1, service2);
         assertThat(composite.root().child("node1").property("property1").asString(), is("value1"));
         assertThat(composite.root().child("node2").property("property2").asString(), is("value2"));
     }
 
     @Test
-    public void itShould_MergePropertiesWherePathsMatch() {
+    public void itShould_MergePropertiesWherePathsMatch() throws Exception {
         when(node1.name()).thenReturn("a node");
         when(node2.name()).thenReturn("a node");
         when(node1.property("a property")).thenReturn(property1);
@@ -120,7 +120,7 @@ public class CompositeConfigServiceTest {
     }
 
     @Test
-    public void itShould_FavourTheFirstServiceWherePropertyPathsMatch() {
+    public void itShould_FavourTheFirstServiceWherePropertyPathsMatch() throws Exception {
         when(node1.name()).thenReturn("a node");
         when(node2.name()).thenReturn("a node");
         when(node1.property("a property")).thenReturn(property1);
@@ -135,7 +135,7 @@ public class CompositeConfigServiceTest {
     }
 
     @Test
-    public void itShould_ReturnNullForUnknownProperties() {
+    public void itShould_ReturnNullForUnknownProperties() throws Exception {
         composite = CompositeConfigService.of(service1);
         assertThat(composite.root().child("node1").property("unknown"), is(nullValue()));
     }
@@ -170,6 +170,13 @@ public class CompositeConfigServiceTest {
         composite.root().child("node1").property("property1").asString();
     }
 
+    @Test(expected=ConfigServiceClosedException.class)
+    public void itShould_ThrowAnExceptionIfAnUndelyingSeviceIsClosed() throws Exception {
+        composite = CompositeConfigService.of(service1);
+        when(service1.isOpen()).thenReturn(false);
+        composite.root();
+    }
+
     @Test
     public void itShould_OpenAllTheComposedServices() throws Exception {
         composite = CompositeConfigService.of(service1, service2);
@@ -185,5 +192,4 @@ public class CompositeConfigServiceTest {
         verify(service1, times(1)).close();
         verify(service2, times(1)).close();
     }
-
 }
