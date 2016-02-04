@@ -1,8 +1,8 @@
 ---
 
-    - copy: src="rpms/cloudera-cdh-4-0.x86_64.rpm" dest=/tmp/
-    - copy: src="rpms/mesosphere-el-repo-7-1.noarch.rpm" dest="/tmp"
-    - copy: src="rpms/epel-release-latest-7.noarch.rpm" dest="/tmp"
+    - copy: src="../../rpms/cloudera-cdh-4-0.x86_64.rpm" dest=/tmp/
+    - copy: src="../../rpms/mesosphere-el-repo-7-1.noarch.rpm" dest="/tmp"
+    - copy: src="../../rpms/epel-release-latest-7.noarch.rpm" dest="/tmp"
 
     - name: Check if Mesosphere EPEL Repo is installed
       command: rpm -q mesosphere-el-repo-7-1

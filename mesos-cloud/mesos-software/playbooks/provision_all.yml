@@ -1,0 +1,13 @@
+---
+- hosts: localhost
+  sudo: yes
+  remote_user: ec2-user
+
+  tasks:
+
+    - include: aws-infrastructure.yml
+
+    - include: master.yml
+ 
+    - include: slave.yml
+

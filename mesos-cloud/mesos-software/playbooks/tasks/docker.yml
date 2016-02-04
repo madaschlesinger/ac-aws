@@ -1,6 +1,6 @@
 ---
 
-    - template: src=repo/docker.repo dest=/etc/yum.repos.d/docker.repo
+    - template: src=../../repo/docker.repo dest=/etc/yum.repos.d/docker.repo
 
 
     - name: Install Docker

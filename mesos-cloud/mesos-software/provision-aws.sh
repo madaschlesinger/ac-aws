@@ -7,7 +7,7 @@ FLAVOUR=$1
 case $FLAVOUR in
 
 plain)
-	ansible-playbook -i ec2.py --extra-vars="flavour=plain" aws-infrastructure.yml
+	ansible-playbook -i ec2.py --extra-vars="flavour=plain" playbooks/aws-infrastructure.yml
 	;;
 
 *)

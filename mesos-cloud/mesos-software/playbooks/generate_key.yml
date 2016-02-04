@@ -1,0 +1,4 @@
+---
+  - name: Personal ec2 keypair
+    ec2_key:
+     name: cristianino

@@ -7,7 +7,7 @@ FLAVOUR=$1
 case $FLAVOUR in
 
 plain)
-	ansible-playbook -i ec2.py --extra-vars="flavour=plain" --limit "tag_Name_Mesos_Master_`echo $(whoami)`_plain" master.yml	
+	ansible-playbook -i ec2.py --extra-vars="flavour=plain" --limit "tag_Name_Mesos_Master_`echo $(whoami)`_plain" playbooks/master.yml	
 	;;
 
 *)
