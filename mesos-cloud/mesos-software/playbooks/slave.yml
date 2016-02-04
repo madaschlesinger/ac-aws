@@ -13,20 +13,28 @@
     - include: tasks/mesos.yml
 
     - template: src="templates/mesos.zk.j2" dest="/etc/mesos/zk"
+      notify: RestartMesosSlave
+
     - template: src="templates/external_ip.j2" dest="/etc/mesos-slave/hostname"
+      notify: RestartMesosSlave
+
     - name: Create file
       command: touch /etc/mesos-slave/containerizers
       args:
        creates: /etc/mesos-slave/containerizers
     - lineinfile: dest=/etc/mesos-slave/containerizers state=present line="docker,mesos"
+      notify: RestartMesosSlave
 
     - name: Create file
       command: touch /etc/mesos-slave/executor_registration_timeout
       args:
        creates: /etc/mesos-slave/executor_registration_timeout
     - lineinfile: dest=/etc/mesos-slave/executor_registration_timeout state=present line="5mins"
+      notify: RestartMesosSlave
 
-    - service : name=mesos-slave state=restarted enabled=yes
+  handlers:
+    - name: "RestartMesosSlave"
+      service : name=mesos-slave state=restarted enabled=yes
 
     - name: Recap
       debug: var=hostvars[inventory_hostname]
