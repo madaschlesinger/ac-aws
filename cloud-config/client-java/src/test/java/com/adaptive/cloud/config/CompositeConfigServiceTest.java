@@ -27,7 +27,7 @@ public class CompositeConfigServiceTest {
 
     private ConfigService mockService(String nodeName, String propertyName, String propertyValue) {
         ConfigService service = mockService();
-        ConfigNode node = addNode(service, nodeName);
+        ConfigNode node = addNode(service.root(), nodeName);
         addProperty(node, propertyName, propertyValue);
         return service;
     }
@@ -38,12 +38,12 @@ public class CompositeConfigServiceTest {
         return service;
     }
 
-    private ConfigNode addNode(ConfigService service, String nodeName) {
-        ArrayList<ConfigNode> children = new ArrayList<>(service.root().children());
+    private ConfigNode addNode(ConfigNode parent, String nodeName) {
+        ArrayList<ConfigNode> children = new ArrayList<>(parent.children());
         ConfigNode newNode = mockNode(nodeName);
         children.add(newNode);
-        when(service.root().children()).thenReturn(children);
-        when(service.root().child(nodeName)).thenReturn(newNode);
+        when(parent.children()).thenReturn(children);
+        when(parent.child(nodeName)).thenReturn(newNode);
         return newNode;
     }
 
@@ -166,6 +166,15 @@ public class CompositeConfigServiceTest {
     }
 
     @Test
+    public void itShould_ResolvePlaceholdersFromASubNode() throws Exception {
+        ConfigService service1 = mockService("a node", "property1", "${sub node.property2}");
+        ConfigNode subNode = addNode(service1.root().child("a node"), "sub node");
+        addProperty(subNode, "property2", "valueSubNode");
+        composite = CompositeConfigService.of(service1);
+        assertThat(composite.root().child("a node").property("property1").asString(), is("valueSubNode"));
+    }
+
+    @Test
     public void itShould_ResolvePlaceholdersFromTheSameNodeUsingFullyQualifiedPath() throws Exception {
         ConfigService service1 = mockService("a node", "property1", "value1", "property2", "${a node.property1}");
         composite = CompositeConfigService.of(service1);
@@ -175,7 +184,7 @@ public class CompositeConfigServiceTest {
     @Test
     public void itShould_ResolvePlaceholdersFromADifferentNode() throws Exception {
         ConfigService service1 = mockService("node1", "property1", "value1");
-        ConfigNode node2 = addNode(service1, "node2");
+        ConfigNode node2 = addNode(service1.root(), "node2");
         addProperty(node2, "property2", "${node1.property1}");
         composite = CompositeConfigService.of(service1);
         assertThat(composite.root().child("node2").property("property2").asString(), is("value1"));
@@ -192,7 +201,7 @@ public class CompositeConfigServiceTest {
     @Test
     public void itShould_ResolvePlaceholdersFromTheCurrentNodeInPreferenceToOtherNodes() throws Exception {
         ConfigService service1 = mockService("a node", "test.property1", "valueCurrentNode", "property2", "${test.property1}");
-        ConfigNode node2 = addNode(service1, "test");
+        ConfigNode node2 = addNode(service1.root(), "test");
         addProperty(node2, "property1", "valueCurrentDifferentNode");
         composite = CompositeConfigService.of(service1);
         assertThat(composite.root().child("a node").property("property2").asString(), is("valueCurrentNode"));
