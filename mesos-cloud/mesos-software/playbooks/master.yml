@@ -6,10 +6,6 @@
 
   tasks:
 
-    #- name: get the current time for a timestamp
-    #  command: hostname
-    #  register: master
-
     - include: tasks/rpms.yml
 
     - include: tasks/zookeeper.yml
