@@ -79,7 +79,10 @@ public class PlaceholderResolver {
         private String findProperty(String name) {
             Property property = findInCurrentNode(name);
             if (property == null) {
-                property = findInHierarchy(name);
+                property = findInSubNode(name);
+            }
+            if (property == null) {
+                property = findInServices(name);
             }
 
             String rawValue = property.rawValue();
@@ -90,7 +93,11 @@ public class PlaceholderResolver {
             return currentNode.property(name);
         }
 
-        private Property findInHierarchy(String name) {
+        private Property findInSubNode(String path) {
+            return findInNode(path, currentNode);
+        }
+
+        private Property findInServices(String name) {
             for (ConfigService service : sources) {
                 Property value = findInService(service, name);
                 if (value != null) {
@@ -101,9 +108,11 @@ public class PlaceholderResolver {
         }
 
         public Property findInService(ConfigService service, String path) {
-            ConfigNode node = service.root();
-            String element = "";
+            return findInNode(path, service.root());
+        }
 
+        private Property findInNode(String path, ConfigNode node) {
+            String element = "";
             Iterator<String> elements = Splitter.on(".").trimResults().split(path).iterator();
             while (elements.hasNext()) {
                 element = elements.next();

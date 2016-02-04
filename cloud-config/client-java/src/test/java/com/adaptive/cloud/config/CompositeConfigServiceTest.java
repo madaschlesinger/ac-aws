@@ -1,12 +1,10 @@
 package com.adaptive.cloud.config;
 
 import com.adaptive.cloud.config.composite.CompositeConfigService;
-import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Map;
 
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
@@ -18,53 +16,56 @@ public class CompositeConfigServiceTest {
 
     private CompositeConfigService composite;
 
+    private ConfigService mockService() {
+        ConfigService service = mock(ConfigService.class);
+        ConfigNode root = mock(ConfigNode.class);
+        when(service.root()).thenReturn(root);
+        when(service.isOpen()).thenReturn(true);
+        when(root.children()).thenReturn(Collections.<ConfigNode>emptyList());
+        return service;
+    }
 
     private ConfigService mockService(String nodeName, String propertyName, String propertyValue) {
         ConfigService service = mockService();
-        addNode(service, nodeName, propertyName, propertyValue);
+        ConfigNode node = addNode(service.root(), nodeName);
+        addProperty(node, propertyName, propertyValue);
         return service;
     }
 
     private ConfigService mockService(String nodeName, String property1Name, String property1Value, String property2Name, String property2Value) {
-        ConfigService service = mockService();
-        addNode(service, nodeName, property1Name, property1Value);
-        addNode(service, nodeName, property2Name, property2Value);
+        ConfigService service = mockService(nodeName, property1Name, property1Value);
+        addProperty(service.root().child(nodeName), property2Name, property2Value);
         return service;
     }
 
-    private ConfigService mockService() {
-        ConfigService service = mock(ConfigService.class);
-        ConfigNode root = mock(ConfigNode.class);
-
-        when(service.root()).thenReturn(root);
-        when(service.isOpen()).thenReturn(true);
-        when(root.children()).thenReturn(Collections.<ConfigNode>emptyList());
-
-        return service;
-    }
-
-    private void addNode(ConfigService service, String nodeName, String propertyName, String propertyValue) {
-        ArrayList<ConfigNode> children = new ArrayList<>(service.root().children());
-        ConfigNode newNode = mockNode(nodeName, ImmutableMap.of(propertyName, propertyValue));
+    private ConfigNode addNode(ConfigNode parent, String nodeName) {
+        ArrayList<ConfigNode> children = new ArrayList<>(parent.children());
+        ConfigNode newNode = mockNode(nodeName);
         children.add(newNode);
-        when(service.root().children()).thenReturn(children);
-        when(service.root().child(nodeName)).thenReturn(newNode);
+        when(parent.children()).thenReturn(children);
+        when(parent.child(nodeName)).thenReturn(newNode);
+        return newNode;
     }
 
-    private ConfigNode mockNode(String nodeName, Map<String, String> propertyNamesAndValues) {
+    private ConfigNode mockNode(String nodeName) {
         ConfigNode node = mock(ConfigNode.class);
         when(node.name()).thenReturn(nodeName);
-
-        ArrayList<Property> properties = new ArrayList<>();
-        for (Map.Entry<String, String> propertyNameAndValue : propertyNamesAndValues.entrySet()) {
-            Property property = mock(Property.class);
-            properties.add(property);
-            when(node.property(propertyNameAndValue.getKey())).thenReturn(property);
-            when(property.name()).thenReturn(propertyNameAndValue.getKey());
-            when(property.rawValue()).thenReturn(propertyNameAndValue.getValue());
-        }
-        when(node.properties()).thenReturn(properties);
         return node;
+    }
+
+    private void addProperty(ConfigNode node, String propertyName, String propertyValue) {
+        ArrayList<Property> properties = new ArrayList<>(node.properties());
+        Property property = mockProperty(propertyName, propertyValue);
+        properties.add(property);
+        when(node.property(propertyName)).thenReturn(property);
+        when(node.properties()).thenReturn(properties);
+    }
+
+    private Property mockProperty(String propertyName, String propertyValue) {
+        Property property = mock(Property.class);
+        when(property.name()).thenReturn(propertyName);
+        when(property.rawValue()).thenReturn(propertyValue);
+        return property;
     }
 
     @Test
@@ -159,15 +160,32 @@ public class CompositeConfigServiceTest {
 
     @Test
     public void itShould_ResolvePlaceholdersFromTheSameNode() throws Exception {
+        ConfigService service1 = mockService("a node", "property1", "value1", "property2", "${property1}");
+        composite = CompositeConfigService.of(service1);
+        assertThat(composite.root().child("a node").property("property2").asString(), is("value1"));
+    }
+
+    @Test
+    public void itShould_ResolvePlaceholdersFromASubNode() throws Exception {
+        ConfigService service1 = mockService("a node", "property1", "${sub node.property2}");
+        ConfigNode subNode = addNode(service1.root().child("a node"), "sub node");
+        addProperty(subNode, "property2", "valueSubNode");
+        composite = CompositeConfigService.of(service1);
+        assertThat(composite.root().child("a node").property("property1").asString(), is("valueSubNode"));
+    }
+
+    @Test
+    public void itShould_ResolvePlaceholdersFromTheSameNodeUsingFullyQualifiedPath() throws Exception {
         ConfigService service1 = mockService("a node", "property1", "value1", "property2", "${a node.property1}");
         composite = CompositeConfigService.of(service1);
         assertThat(composite.root().child("a node").property("property2").asString(), is("value1"));
     }
 
     @Test
-    public void itShould_ResolvePlaceholdersADifferentNode() throws Exception {
+    public void itShould_ResolvePlaceholdersFromADifferentNode() throws Exception {
         ConfigService service1 = mockService("node1", "property1", "value1");
-        addNode(service1, "node2", "property2", "${node1.property1}");
+        ConfigNode node2 = addNode(service1.root(), "node2");
+        addProperty(node2, "property2", "${node1.property1}");
         composite = CompositeConfigService.of(service1);
         assertThat(composite.root().child("node2").property("property2").asString(), is("value1"));
     }
@@ -180,44 +198,31 @@ public class CompositeConfigServiceTest {
         assertThat(composite.root().child("node2").property("property2").asString(), is("value1"));
     }
 
-//    @Test
-//    public void itShould_ResolvePlaceholdersFromTheCurrentNodeIfPossible() throws Exception {
-//        ConfigService service1 = mockService("a node", "a property", "value1");
-//        ConfigService service2 = mockService("a node", "a property", "value2");
-//
-//        composite = CompositeConfigService.of(service1, service2);
-//        assertThat(composite.root().child("node2").property("property2").asString(), is("valueCurrentNode"));
-//    }
+    @Test
+    public void itShould_ResolvePlaceholdersFromTheCurrentNodeInPreferenceToOtherNodes() throws Exception {
+        ConfigService service1 = mockService("a node", "test.property1", "valueCurrentNode", "property2", "${test.property1}");
+        ConfigNode node2 = addNode(service1.root(), "test");
+        addProperty(node2, "property1", "valueCurrentDifferentNode");
+        composite = CompositeConfigService.of(service1);
+        assertThat(composite.root().child("a node").property("property2").asString(), is("valueCurrentNode"));
+    }
 
-//    @Test
-//    public void itShould_ResolvePlaceholdersFromTheFirstRegisteredService() throws Exception {
-//        when(property1.rawValue()).thenReturn("valueOtherServiceNode");
-//        when(property2.rawValue()).thenReturn("${node1.property1}");
-//
-//        Property property3 = mock(Property.class);
-//        when(node2.properties()).thenReturn(ImmutableList.of(property2, property3));
-//        when(node2.property("property3")).thenReturn(property3);
-//        when(property3.name()).thenReturn("node1.property1");
-//        when(property3.rawValue()).thenReturn("valueCurrentNode");
-//
-//        composite = CompositeConfigService.of(service1, service2);
-//        assertThat(composite.root().child("node2").property("property2").asString(), is("valueCurrentNode"));
-//    }
+    @Test
+    public void itShould_ResolvePlaceholdersFromTheFirstRegisteredService() throws Exception {
+        ConfigService service1 = mockService("node1", "property1", "valueFirstService");
+        ConfigService service2 = mockService("node1", "property1", "valueSecondService");
+        ConfigService service3 = mockService("node2", "property2", "${node1.property1}");
+        composite = CompositeConfigService.of(service1, service2, service3);
+        assertThat(composite.root().child("node2").property("property2").asString(), is("valueFirstService"));
+    }
 
-//    @Test
-//    public void itShould_GetPropertyWithNestedPlaceholders() throws Exception {
-//        Property property3 = mock(Property.class);
-//        when(node1.properties()).thenReturn(ImmutableList.of(property1, property3));
-//        when(node1.property("property3")).thenReturn(property3);
-//        when(property3.name()).thenReturn("property3");
-//        when(property3.rawValue()).thenReturn("1");
-//
-//        when(property1.rawValue()).thenReturn("value1");
-//        when(property2.rawValue()).thenReturn("${node1.property${node1.property3}}");
-//        composite = CompositeConfigService.of(service1, service2);
-//
-//        assertThat(composite.root().child("node2").property("property2").asString(), is("value1"));
-//    }
+    @Test
+    public void itShould_GetPropertyWithNestedPlaceholders() throws Exception {
+        ConfigService service1 = mockService("node1", "property1", "value1", "property2", "1");
+        ConfigService service2 = mockService("node2", "property3", "${node1.property${node1.property2}}");
+        composite = CompositeConfigService.of(service1, service2);
+        assertThat(composite.root().child("node2").property("property3").asString(), is("value1"));
+    }
 
     @Test(expected=UnresolvedPlaceholderException.class)
     public void itShould_ThrowExceptionWhenPlaceholderNotKnown() throws Exception {
