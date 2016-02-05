@@ -28,7 +28,7 @@ Instructions to set up a Mesos Cluster
   **cp cloud_login.example.sh cloud_login.sh**    (This file will be ignored by git, so won't risk to upload in the repo)
   
   
-- Execute the login file in THE SAME shell:
+- Execute the login file in THE SAME shell (please note there are 2 dots in the following command):
 
   **. ./cloud_login.sh**
 
