@@ -38,7 +38,7 @@ Instructions to set up a Mesos Cluster
 
 - Provision the Mesos Master
 
-  **./deploy_mater.sh $NAME_OF_YOUR_ENVIRONMENT**
+  **./deploy_master.sh $NAME_OF_YOUR_ENVIRONMENT**
 
 - Provision the Mesos Slave
 
@@ -88,3 +88,34 @@ You can combine the systemctl command with a name matching the first part of the
 Also for logging of those services there is a utility called journalctl and to log just invoke:
 
 **journalctl -xe**
+
+#### Weave
+
+As default inside playbook/vars/vars.yml Weave comes installed.
+
+It is started first on the Mesos Master and later on all the slaves.
+
+To test it, login via ssh on the deployed hosts and start some containers using **weave** command instead of Docker.
+
+Docker could be used as well, just twicking some configuration and enable it to deploy through Weave, but for now let's use weave.
+
+Login in the first host and deploy one ubuntu container to test:
+
+**weave run -it --name a1 ubuntu bash**
+
+This will be identified in Weave DNS with the name a1.weave.local
+
+Login in the other machine and launch another container:
+
+**weave run -it --name a2 ubuntu bash**
+
+Now from the container a1 try to ping the container a2:
+
+**docker exec -it a1 bash**
+
+root@a1:/# ping -c 1 a2
+**PING a2.weave.local (10.32.0.1) 56(84) bytes of data.**
+64 bytes from a2.weave.local (10.32.0.1): icmp_seq=1 ttl=64 time=1.01 ms
+
+--- a2.weave.local ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0
