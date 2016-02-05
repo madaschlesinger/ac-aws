@@ -25,7 +25,6 @@ import java.util.*;
  *
  * @author Spencer Ward
  */
-
 class CompositeConfigNode implements ConfigNode {
     private final ConfigNode parent;
     private final List<ConfigNode> nodes;
@@ -57,18 +56,20 @@ class CompositeConfigNode implements ConfigNode {
 
     @Override
     public Collection<ConfigNode> children() {
-        Multimap<String, ConfigNode> children = ArrayListMultimap.create();
+        ArrayListMultimap<String, ConfigNode> children = ArrayListMultimap.create();
         for (ConfigNode node : nodes) {
             for (ConfigNode child : node.children()) {
                 children.put(child.name(), child);
             }
         }
 
-        return Maps.transformValues(children.asMap(), new Function<Collection<ConfigNode>, ConfigNode>() {
-            public ConfigNode apply(Collection<ConfigNode> nodes1) {
-                return createChild(new ArrayList<>(nodes1));
-            }
-        }).values();
+        Set<String> nodeNames = children.keySet();
+        ArrayList<ConfigNode> mergedChildren = new ArrayList<>();
+        for (String nodeName : nodeNames) {
+            List<ConfigNode> childNodes = children.get(nodeName);
+            mergedChildren.add(createChild(childNodes));
+        }
+        return mergedChildren;
     }
 
     @Override
