@@ -65,3 +65,26 @@ See the diagram of the deployment
 
 
 At the moment the seup is compatible with sigle Master - multi Slaves deployment, not yet support a multi master setup.
+
+
+#### Some practical notes
+
+The deployment is based on a RedHat 7.2 operating system, which is the one will be used in production.
+
+The package manager for this operating system is yum, in case anything more needs to be installed.
+
+All the scripts for starting/stopping the services are based on Systemd which works differently from the classic Upstart.
+
+To control a process use **systemctl** instead of the usual __service__
+
+eg: ** sudo systemctl [start|stop|status|etc..] mesos-slave **
+
+The control scripts  are inside:
+
+/usr/lib/systemd/system
+
+You can combine the systemctl command with a name matching the first part of the name (so remove .service suffix)
+
+Also for logging of those services there is a utility called journalctl and to log just invoke:
+
+**journalctl -xe**
