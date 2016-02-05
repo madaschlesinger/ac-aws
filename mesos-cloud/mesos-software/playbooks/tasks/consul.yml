@@ -17,29 +17,3 @@
 
     - file: path=/etc/consul.d state=directory mode=0744
 
-    - template: src=../templates/consul.service.j2 dest=/usr/lib/systemd/system/consul-slave.service
-      when: consul_agent == "slave"
-
-
-    - name: Run Consul Agent
-      command: /usr/local/bin/consul agent -data-dir /opt/consul_data -node=agent-one -server -bind={{ ansible_eth0["ipv4"]["address"] }} -config-dir /etc/consul.d -bootstrap
-      async: 30
-      poll: 0
-      when: consul_agent == "master"
-      command: systemctl start consul-slave
-      async: 30
-      poll: 0
-      when: consul_agent == "slave"
-      
-
-    - name: Setup optional Consul UI
-      get_url: url=https://releases.hashicorp.com/consul/0.6.3/consul_0.6.3_web_ui.zip dest=/tmp
-      when: consul_UI == "true"
-
-    - name: Uncompress options Consul UI
-      unarchive: src=/tmp/consul_0.6.3_web_ui.zip dest=/opt copy=no
-      when: consul_UI == "true"
-
-    - name: Start UI
-      command: consul agent -ui
-      when: consul_UI == "true"
