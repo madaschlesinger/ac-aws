@@ -37,3 +37,10 @@ Instructions to set up a Mesos Cluster
 - (optional) Deploy a test Docker Container, Jenkins based on top of your Mesos Cluster
 
   cd deploy; ./deploy_app.sh $NAME_OF_YOUR_ENVIRONMENT
+
+
+#### Configuration vars
+
+Inside the file playbook/vars/vars.yml it is possible to configure some variables that define which Service Discovery solution to enable.
+
+Consul and Weave, at the moment 
