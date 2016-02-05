@@ -7,8 +7,8 @@ Instructions to set up a Mesos Cluster
 
 - Install Ansible and boto, usually achieved using pip
 
-  **pip install ansible**
-  **pip install boto**
+  -**pip install ansible**
+  -**pip install boto**
 
 
 #### Procedure
