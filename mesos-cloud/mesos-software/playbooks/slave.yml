@@ -4,6 +4,10 @@
   remote_user: ec2-user
   gather_facts: True
 
+  vars_files:
+    - vars/vars.yml
+
+
   tasks:
 
     - include: tasks/rpms.yml
@@ -11,6 +15,13 @@
     - include: tasks/docker.yml
 
     - include: tasks/mesos.yml
+
+    - include: tasks/weave-slave.yml
+      when: weave_enabled == "True"
+
+    - include: tasks/consul-slave.yml
+      when: consul_enabled == "True"
+
 
     - template: src="templates/mesos.zk.j2" dest="/etc/mesos/zk"
       notify: RestartMesosSlave

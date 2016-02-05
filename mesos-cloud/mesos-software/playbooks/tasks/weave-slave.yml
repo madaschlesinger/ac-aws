@@ -1,0 +1,13 @@
+---
+
+    - include: docker.yml
+
+    - name: Get Weave executable
+      get_url: url=http://git.io/weave dest=/usr/local/bin/weave
+
+    - file: path=/usr/local/bin/weave owner=ec2-user mode=0744
+
+    - name: Systemd script.
+      template: src=../templates/weave.service.j2 dest=/usr/lib/systemd/system/weave.service
+
+    - service : name=weave state=started enabled=yes

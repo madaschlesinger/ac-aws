@@ -48,6 +48,12 @@
           from_port: 6783
           to_port: 6783
           cidr_ip: 0.0.0.0/0
+        - proto: udp 
+          from_port: 6783
+          to_port: 6783
+          cidr_ip: 0.0.0.0/0
+
+
           
 
   - name: Provision a set of instances for Mesos-Marathon Masters
