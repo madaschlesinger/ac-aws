@@ -5,17 +5,17 @@ Instructions to set up a Mesos Cluster
 
 - Login into the AWS Console: https://weareadaptive.signin.aws.amazon.com/console
 
-- Under: Services -> Security and Identity -> IAM -> Users : select your username
+- Under: **Services -> Security and Identity -> IAM -> Users** : select your username
 
 - Create an Access Key and store it safely (download it)
 
-- Under: EC2 Dashboard -> Key Pairs , generate a new key, possibly using your unix account name (the ansible script will use that as a default)
+- Under: **EC2 Dashboard -> Key Pairs** , generate a new key, possibly using your unix account name (the ansible script will use that as a default)
 
-- Download the .pem key and store it under /home/youruser/.ssh. Also change its permission to be 0600
+- Download the .pem key and store it under **/home/youruser/.ssh**. Also change its permission to be **0600**
 
 - Configure the login script and place your configuration inside (Access and Secret keys)
 
-  cp cloud_login.example.sh cloud_login.sh    (This file will be ignored by git, so won't risk to upload in the repo)
+  **cp cloud_login.example.sh cloud_login.sh**    (This file will be ignored by git, so won't risk to upload in the repo)
   
   
 - Execute the login file in THE SAME shell:
