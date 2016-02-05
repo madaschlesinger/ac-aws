@@ -113,9 +113,9 @@ Now from the container a1 try to ping the container a2:
 
 **docker exec -it a1 bash**
 
-root@a1:/# ping -c 1 a2
-**PING a2.weave.local (10.32.0.1) 56(84) bytes of data.**
-64 bytes from a2.weave.local (10.32.0.1): icmp_seq=1 ttl=64 time=1.01 ms
+root@a1:/# ping -c 1 a2 <br />
+**PING a2.weave.local (10.32.0.1) 56(84) bytes of data.**<br />
+64 bytes from a2.weave.local (10.32.0.1): icmp_seq=1 ttl=64 time=1.01 ms<br />
 
---- a2.weave.local ping statistics ---
+--- a2.weave.local ping statistics ---<br />
 1 packets transmitted, 1 received, 0% packet loss, time 0
