@@ -1,0 +1,12 @@
+---
+
+    - include: docker.yml
+
+    - name: Get Weave executable
+      get_url: url=http://git.io/weave dest=/usr/local/bin/weave
+
+    - file: path=/usr/local/bin/weave owner=ec2-user mode=0744
+
+
+    - name: Launch Weave Master
+      command: /usr/local/bin/weave launch
