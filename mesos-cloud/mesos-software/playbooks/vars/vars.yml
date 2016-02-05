@@ -1,4 +1,5 @@
 ---
 
-   weave_enabled: "True"
+   weave_enabled:  "True"
    consul_enabled: "True"
+   consul_UI:      "False"

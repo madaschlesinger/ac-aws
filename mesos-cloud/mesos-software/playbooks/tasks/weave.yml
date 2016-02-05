@@ -16,3 +16,4 @@
       command: /usr/local/bin/weave launch 172.31.42.94
       when: weave_host == "slave"
 
+    - debug: msg="server_role is {{ weave_host }}"

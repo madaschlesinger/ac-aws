@@ -1,0 +1,10 @@
+---
+
+    - include: consul.yml
+
+    - template: src=../templates/consul.service.j2 dest=/usr/lib/systemd/system/consul-slave.service
+
+    - name: Run Consul Agent
+      command: systemctl start consul-slave
+      async: 30
+      poll: 0
