@@ -3,6 +3,16 @@ Mesos Cluster Setup
 
 Instructions to set up a Mesos Cluster
 
+#### Pre Requirements
+
+- Install Ansible and boto, usually achieved using pip
+
+  **pip install ansible**
+  **pip install boto**
+
+
+#### Procedure
+
 - Login into the AWS Console: https://weareadaptive.signin.aws.amazon.com/console
 
 - Under: **Services -> Security and Identity -> IAM -> Users** : select your username
