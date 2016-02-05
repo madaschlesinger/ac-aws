@@ -44,3 +44,11 @@ Instructions to set up a Mesos Cluster
 Inside the file **playbook/vars/vars.yml** it is possible to configure some variables that define which Service Discovery solution to enable.
 
 Consul and Weave, at the moment 
+
+#### Deployment
+
+The deployment will setup a Security Group (for now just a single one) and deploy inside that one master and one slave.
+
+See the diagram of the deployment
+
+![Image of AWS Deployment](https://github.com/AdaptiveConsulting/JPMC-Cloud/blob/master/mesos-cloud/mesos-software/documentation/Mesos-AWS-Architecture.png)
