@@ -2,16 +2,6 @@
 
 echo "Deploying a basice Mesos Slave"
 
-FLAVOUR=$1
+ENV=$1
 
-case $FLAVOUR in
-
-plain)
-	ansible-playbook -i ec2.py --extra-vars="flavour=plain hosts=tag_Name_Mesos_Slave_`echo $(whoami)`_plain master=tag_Name_Mesos_Master_`echo $(whoami)`_plain" playbooks/slave.yml	
-	;;
-
-*)
-  echo "Please select one possible values among [plain|weave|calico|consul]"
-  ;;
-esac
-
+ansible-playbook -i ec2.py --extra-vars="flavour="$ENV" hosts=tag_Name_Mesos_Slave_`echo $(whoami)`_"$ENV" master=tag_Name_Mesos_Master_`echo $(whoami)`_"$ENV"" playbooks/slave.yml	

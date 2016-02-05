@@ -21,6 +21,9 @@
     - include: tasks/weave-master.yml
       when: weave_enabled == "True"
 
+    - include: tasks/consul-master.yml
+      when: consul_enabled == "True"
+
     - service : name=mesos-master state=started enabled=yes
 
     - name: Recap

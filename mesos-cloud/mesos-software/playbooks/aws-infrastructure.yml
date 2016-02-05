@@ -87,5 +87,5 @@
     with_items: slaves.instances
 
   - name: Wait for SSH to come up
-    wait_for: host={{ item }} port=22 delay=60 timeout=320 state=started
+    wait_for: host={{ item.public_ip }} port=22 delay=60 timeout=320 state=started
     with_items: slaves.instances
