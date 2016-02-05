@@ -57,29 +57,6 @@ class CompositeConfigNode implements ConfigNode {
 
     @Override
     public Collection<ConfigNode> children() {
-        return childrenByName().values();
-    }
-
-    @Override
-    public ConfigNode child(String name) {
-        return childrenByName().get(name);
-    }
-
-    @Override
-    public Collection<Property> properties() {
-        return propertiesByName().values();
-    }
-
-    @Override
-    public Property property(String name) {
-        return propertiesByName().get(name);
-    }
-
-    protected void merge(ConfigNode node) {
-        nodes.add(node);
-    }
-
-    private Map<String, ConfigNode> childrenByName() {
         Multimap<String, ConfigNode> children = ArrayListMultimap.create();
         for (ConfigNode node : nodes) {
             for (ConfigNode child : node.children()) {
@@ -88,13 +65,27 @@ class CompositeConfigNode implements ConfigNode {
         }
 
         return Maps.transformValues(children.asMap(), new Function<Collection<ConfigNode>, ConfigNode>() {
-            public ConfigNode apply(Collection<ConfigNode> nodes) {
-                return createChild(new ArrayList<>(nodes));
+            public ConfigNode apply(Collection<ConfigNode> nodes1) {
+                return createChild(new ArrayList<>(nodes1));
             }
-        });
+        }).values();
     }
 
-    private Map<String, Property> propertiesByName() {
+    @Override
+    public ConfigNode child(String name) {
+        List<ConfigNode> children = new ArrayList<>();
+        for (ConfigNode node : nodes) {
+            ConfigNode child = node.child(name);
+            if (child != null) {
+                children.add(child);
+            }
+        }
+
+        return createChild(children);
+    }
+
+    @Override
+    public Collection<Property> properties() {
         Map<String, Property> properties = new HashMap<>();
         for (ConfigNode node : Lists.reverse(nodes)) {
             for (Property property : node.properties()) {
@@ -102,6 +93,22 @@ class CompositeConfigNode implements ConfigNode {
                 properties.put(property.name(), compositeProperty);
             }
         }
-        return properties;
+        return properties.values();
     }
+
+    @Override
+    public Property property(String name) {
+        for (ConfigNode node : nodes) {
+            Property property = node.property(name);
+            if (property != null) {
+                return new StringProperty(property.name(), property.rawValue(), this, resolver);
+            }
+        }
+        return null;
+    }
+
+    protected void merge(ConfigNode node) {
+        nodes.add(node);
+    }
+
 }
