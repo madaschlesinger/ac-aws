@@ -52,3 +52,6 @@ The deployment will setup a Security Group (for now just a single one) and deplo
 See the diagram of the deployment
 
 ![Image of AWS Deployment](https://github.com/AdaptiveConsulting/JPMC-Cloud/blob/master/mesos-cloud/mesos-software/documentation/Mesos-AWS-Architecture.png)
+
+
+At the moment the seup is compatible with sigle Master - multi Slaves deployment, not yet support a multi master setup.
