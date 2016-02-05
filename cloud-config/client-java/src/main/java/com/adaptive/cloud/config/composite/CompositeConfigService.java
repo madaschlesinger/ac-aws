@@ -33,7 +33,7 @@ import java.util.List;
  */
 public class CompositeConfigService implements ConfigService {
 	private final List<ConfigService> services;
-	private final CompositeConfigNode root;
+	private CompositeConfigNode root;
 
 
 	/**
@@ -45,13 +45,7 @@ public class CompositeConfigService implements ConfigService {
 	}
 
 	private CompositeConfigService(ConfigService... services) {
-		PlaceholderResolver resolver = new PlaceholderResolver();
-		resolver.registerSource(this);
 		this.services = Arrays.asList(services);
-		this.root = CompositeConfigNode.createRoot(resolver);
-		for (ConfigService service : services) {
-			root.merge(service.root());
-		}
 	}
 
 	@Override
@@ -80,6 +74,14 @@ public class CompositeConfigService implements ConfigService {
 	@Override
 	public ConfigNode root() {
 		ensureOpen();
+		if (root == null) {
+			PlaceholderResolver resolver = new PlaceholderResolver();
+			resolver.registerSource(this);
+			this.root = CompositeConfigNode.createRoot(resolver);
+			for (ConfigService service : services) {
+				root.merge(service.root());
+			}
+		}
 		return root;
 	}
 

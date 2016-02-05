@@ -45,9 +45,12 @@ class ConfigNodeImpl implements ConfigNode {
      * @return the new child node
      */
     ConfigNodeImpl addChild(String node) {
-        ConfigNodeImpl child = new ConfigNodeImpl(node, this, resolver);
-        children.put(child.name(), child);
-        return child;
+        if (!children.containsKey(node)) {
+            ConfigNodeImpl child = new ConfigNodeImpl(node, this, resolver);
+            children.put(node, child);
+        }
+        //todo - avoid cast
+        return (ConfigNodeImpl) children.get(node);
     }
 
     /**
