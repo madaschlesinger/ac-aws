@@ -20,11 +20,11 @@ Instructions to set up a Mesos Cluster
   
 - Execute the login file in THE SAME shell:
 
-  . ./cloud_login.sh
+  ** . ./cloud_login.sh
 
 - Provision the AWS infrastructure:
  
-  ./provision-aws.sh $NAME_OF_YOUR_ENVIRONMENT
+  ** ./provision-aws.sh $NAME_OF_YOUR_ENVIRONMENT
 
 - Provision the Mesos Master
 
