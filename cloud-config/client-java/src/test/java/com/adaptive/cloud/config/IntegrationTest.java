@@ -2,6 +2,7 @@ package com.adaptive.cloud.config;
 
 import com.adaptive.cloud.config.composite.CompositeConfigService;
 import com.adaptive.cloud.config.file.FileConfigService;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.net.URL;
@@ -11,6 +12,7 @@ import static org.junit.Assert.assertThat;
 
 public class IntegrationTest {
     @Test
+    @Ignore
     public void basicTest() throws Exception {
         ConfigService overrideFile = FileConfigService.fromProperties("database", url("integration-overrides.properties"));
         ConfigService mainFile = FileConfigService.fromProperties("main", url("integration-main.properties"));
