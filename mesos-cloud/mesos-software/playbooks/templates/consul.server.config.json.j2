@@ -1,0 +1,13 @@
+{% for host in groups[master] %}
+{
+
+    "bootstrap": false,
+    "server": true,
+    "datacenter": "dc1",
+    "data_dir": "/var/consul",
+    "log_level": "INFO",
+    "enable_syslog": true,
+    "start_join": ["{{ hostvars[host]['ec2_private_ip_address']}}"],
+    "enable_syslog": true
+}
+{% endfor %}
