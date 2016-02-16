@@ -1,11 +1,6 @@
 ---
 
-    - include: docker.yml
-
-    - name: Get Weave executable
-      get_url: url=http://git.io/weave dest=/usr/local/bin/weave
-
-    - file: path=/usr/local/bin/weave owner=ec2-user mode=0744
+    - include: weave.yml
 
     - command: ps -ef | grep weaveproxy | grep -v grep | wc -l
       register: result

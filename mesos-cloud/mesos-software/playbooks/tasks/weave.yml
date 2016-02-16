@@ -1,19 +1,12 @@
 ---
 
+    - include: docker.yml
+
+    - stat: path=/usr/local/bin/weave
+      register: weave_executable
+
     - name: Get Weave executable
       get_url: url=http://git.io/weave dest=/usr/local/bin/weave
+      when: weave_executable.stat.exists == False
 
     - file: path=/usr/local/bin/weave owner=ec2-user mode=0744
-
-    - name: Configure Weave if slave
-      template : src="../templates/internal_ip.j2" dest="/tmp/master"
-      when: weave_host == "slave"
-
-
-    - name: Launch Weave Master
-      command: /usr/local/bin/weave launch
-      when: weave_host == "master"
-      command: /usr/local/bin/weave launch 172.31.42.94
-      when: weave_host == "slave"
-
-    - debug: msg="server_role is {{ weave_host }}"
