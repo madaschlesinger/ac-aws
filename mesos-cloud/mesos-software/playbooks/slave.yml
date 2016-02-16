@@ -43,6 +43,8 @@
     - lineinfile: dest=/etc/mesos-slave/executor_registration_timeout state=present line="5mins"
       notify: RestartMesosSlave
 
+    - service : name=mesos-master state=stopped enabled=no
+
   handlers:
     - name: "RestartMesosSlave"
       service : name=mesos-slave state=restarted enabled=yes
