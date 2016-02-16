@@ -1,0 +1,12 @@
+---
+- hosts: all
+  sudo: yes
+  remote_user: ec2-user
+  gather_facts: True
+
+  vars:
+   consul_UI: "false"
+
+  tasks:
+
+    - include: tasks/consul-master.yml
