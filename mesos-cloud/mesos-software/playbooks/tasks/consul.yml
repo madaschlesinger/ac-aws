@@ -13,7 +13,12 @@
 
     - file: path=/usr/local/bin/consul owner=ec2-user mode=0744
 
-    - file: path=/opt/consul_data state=directory mode=0744
+    - file: path=/var/consul state=directory mode=0744
 
     - file: path=/etc/consul.d state=directory mode=0744
 
+    - file: path=/etc/consul.d/{{ item }} owner=ec2-user mode=0744 state=directory
+      with_items:
+        - bootstrap
+        - server
+        - client

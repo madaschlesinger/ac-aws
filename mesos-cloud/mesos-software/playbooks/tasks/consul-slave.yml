@@ -2,9 +2,8 @@
 
     - include: consul.yml
 
-    - template: src=../templates/consul.service.j2 dest=/usr/lib/systemd/system/consul-slave.service
+    - template: src=../templates/consul.service.client.j2 dest=/usr/lib/systemd/system/consul-slave.service
 
-    - name: Run Consul Agent
-      command: systemctl start consul-slave
-      async: 30
-      poll: 0
+    - template: src="../templates/consul.server.config.json.j2" dest="/etc/consul.d/server/consul.server.config.json"
+
+    - service: name="consul-slave" state=started  enabled=yes
