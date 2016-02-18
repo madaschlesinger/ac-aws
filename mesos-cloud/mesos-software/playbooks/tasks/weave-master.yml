@@ -6,3 +6,13 @@
       register: result
       ignore_errors: True
       command: /usr/local/bin/weave launch
+
+    - lineinfile: dest=/usr/lib/systemd/system/docker.service state=present regexp=^ExecStart= line="ExecStart=/usr/bin/docker daemon -H fd:// --bridge=weave --fixed-cidr=10.40.0.0/16"
+      register: DockerRestart
+
+    - command: systemctl daemon-reload
+      when: DockerRestart.changed
+
+    - service: name=docker state=restarted enabled=true
+      when: DockerRestart.changed
+
