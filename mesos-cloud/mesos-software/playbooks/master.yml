@@ -18,6 +18,8 @@
 
     - include: tasks/mesos.yml
 
+    - include: tasks/docker.yml
+
     - include: tasks/weave-master.yml
       when: weave_enabled == "True"
 
@@ -38,3 +40,7 @@
 
     - name: Instructions Marathon
       debug: msg="Login into Marathon Console http://{{ ec2_dns_name }}:8080"
+  
+  handlers:
+    - name: "DockerRestart"
+      service : name=docker state=restarted enabled=yes

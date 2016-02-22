@@ -49,5 +49,9 @@
     - name: "RestartMesosSlave"
       service : name=mesos-slave state=restarted enabled=yes
 
+    - name: "DockerRestart"
+      service : name=docker state=restarted enabled=yes
+
+
     - name: Recap
       debug: var=hostvars[inventory_hostname]

@@ -2,17 +2,11 @@
 
     - include: weave.yml
 
-    - command: ps -ef | grep weaveproxy | grep -v grep | wc -l
-      register: result
-      ignore_errors: True
-      command: /usr/local/bin/weave launch
+    - name: Systemd script
+      template: src=../templates/weave.agent.service.j2 dest=/usr/lib/systemd/system/weave.service
 
-    - lineinfile: dest=/usr/lib/systemd/system/docker.service state=present regexp=^ExecStart= line="ExecStart=/usr/bin/docker daemon -H fd:// --bridge=weave --fixed-cidr=10.40.0.0/16"
-      register: DockerRestart
+    - service : name=weave state=started enabled=yes
 
-    - command: systemctl daemon-reload
-      when: DockerRestart.changed
+    - wait_for: path=/var/run/weave/weave.sock delay=10
 
-    - service: name=docker state=restarted enabled=true
-      when: DockerRestart.changed
-
+    - wait_for: path=/proc/sys/net/ipv4/conf/weave delay=10
