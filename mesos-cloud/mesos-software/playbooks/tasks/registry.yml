@@ -1,0 +1,42 @@
+---
+
+# This is NOT backed up by S3 as good practice becasue we want to destroy it when we destroy the test machine
+
+# Create a bucket if doesn't exist and give the right policy to access it by machines
+
+   - name: Create S3 policy from template
+     iam_policy:
+       iam_type: role
+       iam_name: "docker_registry"
+       policy_name: "docker_registry"
+       state: present
+       policy_json: "../templates/s3_policy.json.j2"
+
+
+   - name: Install Docker Py module to deploy docker container directly into the host
+     yum: pkg={{item}} state=latest update_cache=yes
+     with_items:
+      - python
+      - python-pip 
+
+   - pip: name=docker-py
+
+   - file: path=/certs owner=ec2-user mode=0700 state=directory
+   
+   - copy: src=../../registry/server.crt dest=/certs
+ 
+   - copy: src=../../registry/server.key dest=/certs
+
+   - name: Deploy the container for Docker Registry - Internal
+     docker:
+       name: registry
+       image: registry:2
+       state: reloaded
+       pull: always
+       ports:
+       - "5000:5000"
+       volumes:
+       - /certs:/certs
+       env:
+         REGISTRY_HTTP_TLS_CERTIFICATE: /certs/server.crt
+         REGISTRY_HTTP_TLS_KEY: /certs/server.key
