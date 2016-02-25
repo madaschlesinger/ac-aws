@@ -2,6 +2,10 @@
   "id": "jenkins6",
   "cpus": 0.5,
   "mem": 400.0,
+  "labels": {
+        "HAPROXY_GROUP" : "external",
+        "HAPROXY_0_VHOST" : "54.194.91.160"
+      },
   "container": {
     "type": "DOCKER",
     "docker": {
