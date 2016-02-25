@@ -11,3 +11,11 @@
     - user: name=ec2-user groups=docker append=yes
 
     - service : name=docker state=started enabled=yes
+
+    - name: Install Docker Py module to deploy docker container directly into the host
+      yum: pkg={{item}} state=latest update_cache=yes
+      with_items:
+       - python
+       - python-pip
+
+    - pip: name=docker-py
