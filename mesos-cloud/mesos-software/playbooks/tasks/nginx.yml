@@ -1,0 +1,11 @@
+---
+
+    - name: Install NGINX
+      yum: pkg={{item}} state=latest update_cache=yes
+      with_items:
+      - nginx
+
+
+    - template: src=../templates/nginx.cfg.j2 dest=/etc/haproxy/haproxy.cfg
+
+    - service : name=nginx state=started enabled=yes
