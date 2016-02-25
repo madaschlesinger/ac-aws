@@ -11,7 +11,7 @@ export ANSIBLE_HOSTS=$PWD/ec2.py
 
 echo "Setting authentication key into the agent to allow to authenticate with: ssh ec2-user@aws-server-external-ip"
 
-eval "ssh-add /home/${USER}/.ssh/${USER}.pem"
+eval "ssh-add /home/${USER}/.ssh/ec2-user.pem"
 
 echo "Agent is loaded with this key: `ssh-add -L`"
 echo "If you don't see any keys listed above you may want to manually execute: ssh-agent bash"
