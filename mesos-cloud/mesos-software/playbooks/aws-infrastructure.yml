@@ -3,14 +3,38 @@
   connection: local
   gather_facts: True
 
+  vars_files:
+    - vars/vars.yml
+
   tasks:
+
+  - name: VPC 
+    local_action:
+      module: ec2_vpc
+      state: present
+      region: "{{ ec2_region }}"
+      cidr_block: "{{ vpc_cidr_block }}"
+      subnets:
+       - cidr: 10.31.16.0/20
+         az: eu-west-1a
+         resource_tags: { "Name": "master_subnet_vpc" }
+       - cidr: 10.31.48.0/20
+         az: eu-west-1a
+         register: master_subnet_vpc
+         resource_tags: { "Name": "slave_subnet_vpc" }
+         register: slave_subnet_vpc
+      internet_gateway: "yes"
+      route_tables: "{{ vpc_route_tables }}"
+      resource_tags: { "Name": "jpmc_vpc" }
+      wait: true
+    register: vpc
 
   - name: Mesos security Group
     ec2_group:
-      name: Mesos-SG
+      name: Mesos-SG-Master
       description: Security Group for Mesos Master
-      vpc_id: vpc-bd98c9d8
-      region: eu-west-1
+      vpc_id: "{{ vpc.vpc_id }}"
+      region: "{{ ec2_region }}"
       rules:
         - proto: tcp
           from_port: 22
@@ -19,6 +43,18 @@
         - proto: icmp
           from_port: 8 # icmp type, -1 = any type
           to_port:  -1 # icmp subtype, -1 = any subtype
+          cidr_ip: 0.0.0.0/0
+        - proto: tcp
+          from_port: 80
+          to_port: 80
+          cidr_ip: 0.0.0.0/0
+        - proto: tcp
+          from_port: 443 
+          to_port: 443 
+          cidr_ip: 0.0.0.0/0
+        - proto: tcp
+          from_port: 5000
+          to_port: 5000
           cidr_ip: 0.0.0.0/0
         - proto: tcp
           from_port: 5050 
@@ -60,17 +96,33 @@
           from_port: 8301
           to_port: 8301
           cidr_ip: 0.0.0.0/0
+
+  - name: Mesos security Group for Slaves Hosts
+    ec2_group:
+      name: Mesos-SG-Slaves
+      description: Security Group for Mesos Slaves 
+      vpc_id: "{{ vpc.vpc_id }}"
+      region: "{{ ec2_region }}"
+      rules:
+        - proto: tcp
+          from_port: 22
+          to_port: 22
+          cidr_ip: 0.0.0.0/0
+        - proto: all 
+          cidr_ip: 10.31.16.0/20
           
 
   - name: Provision a set of instances for Mesos-Marathon Masters
     ec2:
-      key_name: "{{ ansible_user_id }}"
+      key_name: "{{ key_name }}"
       instance_type: t2.micro
       image: "ami-8b8c57f8"
-      group: "Mesos-SG"
+      group: "Mesos-SG-Master"
       wait: true
-      region: "eu-west-1"
-      exact_count: 1
+      region: "{{ ec2_region }}"
+      exact_count: "{{ num_master_servers }}"
+      vpc_subnet_id: "{{ vpc.subnets[0].id }}"
+      assign_public_ip: "{{ assign_public_ip }}"
       count_tag:
          Name: "Mesos-Master-{{ ansible_user_id }}-{{ flavour }}"
       instance_tags:
@@ -86,13 +138,15 @@
 
   - name: Provision a set of instances for Mesos Slaves
     ec2:
-      key_name: "{{ ansible_user_id }}"
+      key_name: "{{ key_name }}"
       instance_type: t2.micro
       image: "ami-8b8c57f8"
-      group: "Mesos-SG"
+      group: "Mesos-SG-Slaves"
       wait: true
-      region: "eu-west-1"
-      exact_count: 1
+      region: "{{ ec2_region }}"
+      exact_count: "{{ num_slave_servers }}" 
+      vpc_subnet_id: "{{ vpc.subnets[1].id }}" 
+      assign_public_ip: "{{ assign_public_ip }}"
       count_tag:
          Name: "Mesos-Slave-{{ ansible_user_id }}-{{ flavour }}"
       instance_tags:
@@ -108,4 +162,7 @@
 
   - name: Wait for SSH to come up
     wait_for: host={{ item.public_ip }} port=22 delay=60 timeout=320 state=started
-    with_items: slaves.instances
+    with_items: masters.instances
+
+  - name: Recap
+    debug: var=vpc
