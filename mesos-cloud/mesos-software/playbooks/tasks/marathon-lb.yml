@@ -1,0 +1,22 @@
+---
+## Copying the git to include the source marathon_lb.py, but issues in running it on bare server, at the moment will run
+## inside its Docker container
+
+    - copy: src=../../marathon-lb dest=/opt
+
+    - name: Deploy the container for Docker Registry - Internal
+      docker:
+        name: marathon-lb 
+        image: mesosphere/marathon-lb
+        state: reloaded
+        pull: always
+        privileged: yes
+        restart_policy: always
+        ports:
+        - "80:80"
+        - "443:443"
+        - "81:81"
+        - "9090:9090"
+        env:
+          PORTS: 80,443,9090,81 
+        command: sse --marathon http://{{ ansible_eth0["ipv4"]["address"] }}:8080 --group external
