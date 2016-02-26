@@ -2,8 +2,6 @@
 ## Copying the git to include the source marathon_lb.py, but issues in running it on bare server, at the moment will run
 ## inside its Docker container
 
-    - copy: src=../../marathon-lb dest=/opt
-
     - name: Deploy the container for Docker Registry - Internal
       docker:
         name: marathon-lb 
