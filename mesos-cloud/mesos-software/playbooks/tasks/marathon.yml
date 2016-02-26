@@ -7,5 +7,7 @@
 
     - file: path=/etc/marathon/conf state=directory mode=0744
     - template : src="../templates/external_ip.j2" dest="/etc/marathon/conf/hostname"
+      register: RestartMarathon
 
-    - service : name=marathon state=started enabled=yes
+    - service : name=marathon state=restarted enabled=yes
+      when: RestartMarathon.changed
