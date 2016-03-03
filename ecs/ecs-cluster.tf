@@ -19,13 +19,13 @@ resource "aws_autoscaling_group" "terraform-ecs-cluster" {
 }
 
 resource "aws_iam_instance_profile" "ecs" {
-    name = "ecs_profile_terraform"
-    roles = ["weave-ecs-role"]
+    name = "launch_profile"
+    roles = ["${aws_iam_role.terraform_ecs_instance.id}"]
     path = "/"
 }
 
 resource "aws_launch_configuration" "ecs" {
-    image_id = "ami-a77b0ac7"
+    image_id = "ami-77ab1504"
     instance_type = "${var.instance_type}"
     security_groups = ["${aws_security_group.slaves.id}"]
     iam_instance_profile = "${aws_iam_instance_profile.ecs.name}"
@@ -40,6 +40,13 @@ resource "aws_ecs_service" "jenkins" {
   cluster = "${aws_ecs_cluster.jpmc-ecs-cluster.id}"
   task_definition = "${aws_ecs_task_definition.jenkins.arn}"
   desired_count = 1
+  iam_role = "${aws_iam_role.terraform_ecs_instance.arn}"
+
+  load_balancer {
+    elb_name = "${aws_elb.jenkins.id}"
+    container_name = "jenkins"
+    container_port = 8080
+  }
 
 }
 
