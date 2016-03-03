@@ -44,8 +44,8 @@ resource "aws_security_group" "slaves" {
   vpc_id = "${aws_vpc.terraform_vpc.id}"
 
   ingress {
-      from_port = 1
-      to_port = 65535
+      from_port = 0
+      to_port = 0 
       protocol = "-1"
       cidr_blocks = ["0.0.0.0/0"]
   }
@@ -54,7 +54,31 @@ resource "aws_security_group" "slaves" {
       from_port = 0
       to_port = 0
       protocol = "-1"
-      cidr_blocks = ["10.0.1.0/24"]
+      cidr_blocks = ["0.0.0.0/0"]
   }
 }
 
+
+resource "aws_security_group" "ELBS" {
+  name = "Public facing ELBs- ECS Terraform"
+  description = "Allow access only on standard ports"
+  vpc_id = "${aws_vpc.terraform_vpc.id}"
+
+  ingress {
+      from_port = 80
+      to_port = 80
+      protocol = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+      from_port = 0
+      to_port = 0
+      protocol = "-1"
+      cidr_blocks = ["0.0.0.0/0"]
+      from_port = 0
+      to_port = 0
+      protocol = "-1"
+      cidr_blocks = ["10.0.1.0/24"]
+  }
+}
