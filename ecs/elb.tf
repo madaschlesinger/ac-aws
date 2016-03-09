@@ -2,6 +2,7 @@
 resource "aws_elb" "jenkins" {
   name = "jenkins-terraform-elb"
   subnets = ["${aws_subnet.ELBS.id}"]
+  security_groups = ["${aws_security_group.ELBS.id}"]
 
   listener {
     instance_port = 8083
