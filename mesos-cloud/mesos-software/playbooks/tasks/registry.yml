@@ -4,13 +4,13 @@
 
 # Create a bucket if doesn't exist and give the right policy to access it by machines
 
-   - name: Create S3 policy from template
-     iam_policy:
-       iam_type: role
-       iam_name: "docker_registry"
-       policy_name: "docker_registry"
-       state: present
-       policy_json: "../templates/s3_policy.json.j2"
+#   - name: Create S3 policy from template
+#     iam_policy:
+#       iam_type: role
+#       iam_name: "docker_registry"
+#       policy_name: "docker_registry"
+#       state: present
+#       policy_json: "../templates/s3_policy.json.j2"
 
 
    - name: Install Docker Py module to deploy docker container directly into the host
