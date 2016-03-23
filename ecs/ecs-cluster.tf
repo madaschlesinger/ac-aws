@@ -19,7 +19,7 @@ resource "aws_autoscaling_group" "terraform-ecs-cluster" {
 }
 
 resource "aws_iam_instance_profile" "ecs" {
-    name = "launch_profile"
+    name = "ecs_launch_profile"
     roles = ["${aws_iam_role.terraform_ecs_instance.id}"]
     path = "/"
 }

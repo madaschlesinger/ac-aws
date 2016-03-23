@@ -1,6 +1,6 @@
 # Create a new load balancer
-resource "aws_elb" "jenkins" {
-  name = "jenkins-terraform-elb"
+resource "aws_elb" "nginx" {
+  name = "nginx-terraform-elb"
   subnets = ["${aws_subnet.ELBS.id}"]
   security_groups = ["${aws_security_group.ELBS.id}"]
 
@@ -23,6 +23,6 @@ resource "aws_elb" "jenkins" {
   connection_draining_timeout = 400
 
   tags {
-    Name = "jenkins-terraform-elb"
+    Name = "nginx-terraform-elb"
   }
 }

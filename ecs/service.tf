@@ -1,25 +1,21 @@
-resource "aws_ecs_service" "jenkins" {
-  name = "jenkins"
+resource "aws_ecs_service" "nginx" {
+  name = "nginx"
   cluster = "${aws_ecs_cluster.jpmc-ecs-cluster.id}"
-  task_definition = "${aws_ecs_task_definition.jenkins.arn}"
+  task_definition = "${aws_ecs_task_definition.nginx.arn}"
   desired_count = 1
   iam_role = "${aws_iam_role.terraform_ecs_instance.arn}"
 
   load_balancer {
-    elb_name = "${aws_elb.jenkins.id}"
-    container_name = "jenkins"
-    container_port = 8080
+    elb_name = "${aws_elb.nginx.id}"
+    container_name = "nginx"
+    container_port = 80
   }
 
 }
 
-resource "aws_ecs_task_definition" "jenkins" {
-  family = "jenkins"
-  container_definitions = "${file("tasks/jenkins.json")}"
+resource "aws_ecs_task_definition" "nginx" {
+  family = "nginx"
+  container_definitions = "${file("tasks/nginx.json")}"
 
-  volume {
-    name = "jenkins-home"
-    host_path = "/ecs/jenkins-home"
-  }
 }
 
