@@ -15,10 +15,10 @@
       region: "{{ ec2_region }}"
       cidr_block: "{{ vpc_cidr_block }}"
       subnets:
-       - cidr: 10.31.16.0/20
+       - cidr: 172.31.16.0/20
          az: eu-west-1a
          resource_tags: { "Name": "master_subnet_vpc" }
-       - cidr: 10.31.48.0/20
+       - cidr: 172.31.48.0/20
          az: eu-west-1a
          register: master_subnet_vpc
          resource_tags: { "Name": "slave_subnet_vpc" }
@@ -109,7 +109,7 @@
           to_port: 22
           cidr_ip: 0.0.0.0/0
         - proto: all 
-          cidr_ip: 10.31.16.0/20
+          cidr_ip: 172.31.16.0/20
           
 
   - name: Provision a set of instances for Mesos-Marathon Masters

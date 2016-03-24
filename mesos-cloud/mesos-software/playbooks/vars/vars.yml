@@ -5,17 +5,18 @@
    consul_UI:         "False"
    registry_enabled:  "False"
    haproxy_enabled:   "True"
+   spark_enabled:     "True"
 
 
    ec2_region:        "eu-west-1"
 
-   vpc_cidr_block: 10.31.0.0/16
+   vpc_cidr_block: 172.31.0.0/16
    vpc_name: "jpmc"
    vpc_subnets:
-       - cidr: 10.31.16.0/20
+       - cidr: 172.31.16.0/20
          az: eu-west-1a
          resource_tags: "Web"
-       - cidr: 10.31.48.0/20
+       - cidr: 172.31.48.0/20
          az: eu-west-1a
          resource_tags: "Slaves"
    vpc_internet_gateway: "yes"
@@ -23,8 +24,8 @@
 
    vpc_route_tables:
        - subnets:
-          - 10.31.16.0/20 
-          - 10.31.48.0/20
+          - 172.31.16.0/20 
+          - 172.31.48.0/20
          routes:
           - dest: 0.0.0.0/0
             gw: igw
@@ -32,4 +33,4 @@
    num_master_servers: 1
    num_slave_servers: 1
 
-   assign_public_ip: yes
+   assign_public_ip: no
