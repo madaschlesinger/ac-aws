@@ -33,6 +33,9 @@
 
     - include: tasks/marathon-lb.yml
       when: haproxy_enabled == "True"
+  
+    - include: tasks/spark.yml
+      when: spark_enabled == "True"
 
     - service : name=mesos-master state=started enabled=yes
    
