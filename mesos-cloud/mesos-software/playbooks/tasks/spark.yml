@@ -1,0 +1,10 @@
+---
+
+    - file: path=/opt/spark owner=ec2-user state=directory
+
+    - name: Get Spark executable
+      get_url: url=http://apache.mirrors.lucidnetworks.net/spark/spark-1.6.1/spark-1.6.1.tgz dest=/opt/spark
+
+    - shell: tar -xvf /opt/spark/spark-1.6.1.tgz
+
+
