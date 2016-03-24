@@ -33,4 +33,4 @@
    num_master_servers: 1
    num_slave_servers: 1
 
-   assign_public_ip: no
+   assign_public_ip: yes 
