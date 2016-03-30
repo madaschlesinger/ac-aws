@@ -1,0 +1,15 @@
+[
+  {
+    "name": "java-cloud",
+    "image": "johnisadaptive/services-standalone-rest",
+    "cpu": 400,
+    "memory": 400,
+    "essential": true,
+    "portMappings": [
+      {
+        "containerPort": 8080,
+        "hostPort": 8080
+      }
+    ]
+  }
+]

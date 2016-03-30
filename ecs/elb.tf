@@ -1,11 +1,11 @@
 # Create a new load balancer
-resource "aws_elb" "nginx" {
-  name = "nginx-terraform-elb"
+resource "aws_elb" "java-service" {
+  name = "java-service-terraform-elb"
   subnets = ["${aws_subnet.ELBS.id}"]
   security_groups = ["${aws_security_group.ELBS.id}"]
 
   listener {
-    instance_port = 8083
+    instance_port = 8080
     instance_protocol = "http"
     lb_port = 80
     lb_protocol = "http"
@@ -15,7 +15,7 @@ resource "aws_elb" "nginx" {
     healthy_threshold = 2
     unhealthy_threshold = 2
     timeout = 3
-    target = "HTTP:8083/"
+    target = "HTTP:8080/"
     interval = 30
   }
 
@@ -23,6 +23,6 @@ resource "aws_elb" "nginx" {
   connection_draining_timeout = 400
 
   tags {
-    Name = "nginx-terraform-elb"
+    Name = "java-service-terraform-elb"
   }
 }

@@ -14,7 +14,7 @@ resource "aws_security_group" "jumphosts" {
       from_port = 1
       to_port = 65535 
       protocol = "tcp"
-      cidr_blocks = ["10.0.1.0/24"]
+      cidr_blocks = ["10.0.1.0/24","10.0.2.0/24","10.0.3.0/24","10.0.4.0/24"]
   }
 }
 
@@ -82,3 +82,28 @@ resource "aws_security_group" "ELBS" {
       cidr_blocks = ["10.0.1.0/24"]
   }
 }
+
+resource "aws_security_group" "shared-services" {
+  name = "Shared Services"
+  description = "Allow access only on services ports"
+  vpc_id = "${aws_vpc.terraform_vpc.id}"
+
+  ingress {
+      from_port = 22
+      to_port = 22
+      protocol = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+      from_port = 0
+      to_port = 0
+      protocol = "-1"
+      cidr_blocks = ["0.0.0.0/0"]
+      from_port = 0
+      to_port = 0
+      protocol = "-1"
+      cidr_blocks = ["10.0.1.0/24"]
+  }
+}
+
