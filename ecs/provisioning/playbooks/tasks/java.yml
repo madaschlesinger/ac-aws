@@ -1,0 +1,8 @@
+---
+
+    - copy: src="../../../mesos-cloud/mesos-software/rpms/jdk-8u77-linux-x64.rpm" dest=/tmp/
+
+    - name: Execute script if Zookeeper is not installed
+      yum: name=/tmp/jdk-8u77-linux-x64.rpm state=present
+
+

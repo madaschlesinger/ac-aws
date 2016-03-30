@@ -1,4 +1,5 @@
 instance_type = "t2.micro"
 aws_key_name  = "ec2-user"
 aws_region    = "eu-west-1"
-
+mesos-marathon-vpc = "vpc-c2eaf9a7"
+peer_owner_id = "625998979483"

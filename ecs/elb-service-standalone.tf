@@ -1,6 +1,6 @@
 # Create a new load balancer
-resource "aws_elb" "java-service" {
-  name = "java-service-terraform-elb"
+resource "aws_elb" "java-service-standalone" {
+  name = "service-elb-standalone"
   subnets = ["${aws_subnet.ELBS.id}"]
   security_groups = ["${aws_security_group.ELBS.id}"]
 

@@ -1,0 +1,26 @@
+[
+  {
+    "name": "services-indexed-rest",
+    "image": "johnisadaptive/services-indexed-rest",
+    "cpu": 400,
+    "memory": 400,
+    "essential": true,
+    "portMappings": [
+      {
+        "containerPort": 8080,
+        "hostPort": 8081
+      }
+    ],
+    "environment": [
+        {
+          "name": "ZK_ADDR",
+          "value": "zookeeper.dev.internal.jpmorgan.com:2181"
+        },
+        {
+          "name": "POOL_PATH",
+          "value": "/pool"
+        }
+      ]
+
+  }
+]

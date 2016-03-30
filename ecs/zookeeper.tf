@@ -1,15 +1,5 @@
 # Need to create an Internal Network Interface and register a record into Route53
 
-resource "aws_network_interface" "zookeepeer-eni" {
-    subnet_id = "${aws_subnet.shared-services.id}"
-    private_ips = ["10.0.4.50"]
-    security_groups = ["${aws_security_group.shared-services.id}"]
-    attachment {
-        instance = "${aws_instance.zookeeper.id}"
-        device_index = 1
-    }
-}
-
 resource "aws_instance" "zookeeper" {
     ami = "ami-8b8c57f8"
     instance_type = "t2.micro"
@@ -22,15 +12,15 @@ resource "aws_instance" "zookeeper" {
     }
 }
 
-resource "aws_route53_record" "zookeepeer-dev" {
+resource "aws_route53_record" "zookeeper-dev" {
    zone_id = "${aws_route53_zone.dev.zone_id}"
-   name = "zookeepeer-dev"
+   name = "zookeeper"
    type = "A"
    ttl = "300"
-   records = ["${aws_network_interface.zookeepeer-eni.private_ips}"]
+   records = ["${aws_instance.zookeeper.private_ip}"]
 }
 
-resource "aws_route_table_association" "zookeepeer-routing" {
+resource "aws_route_table_association" "zookeeper-routing" {
     subnet_id = "${aws_subnet.shared-services.id}"
-    route_table_id = "${aws_route_table.nat.id}"
+    route_table_id = "${aws_route_table.r.id}"
 }

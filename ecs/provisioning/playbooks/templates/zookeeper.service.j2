@@ -1,0 +1,14 @@
+# {{ansible_managed}}
+
+[Unit]
+Description=Zookeeper
+After=network.target
+Wants=network.target
+
+[Service]
+ExecStart=/usr/lib/zookeeper/bin/zkServer.sh start-foreground
+Restart=always
+RestartSec=20
+
+[Install]
+WantedBy=multi-user.target
