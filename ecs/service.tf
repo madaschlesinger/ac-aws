@@ -7,7 +7,7 @@ resource "aws_ecs_service" "java-cloud" {
 
   load_balancer {
     elb_name = "${aws_elb.java-service.id}"
-    container_name = "johnisadaptive/services-standalone-rest"
+    container_name = "java-cloud"
     container_port = 8080
   }
 
