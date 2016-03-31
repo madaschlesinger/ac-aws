@@ -1,0 +1,22 @@
+[
+  {
+    "name": "services-zeromq-server",
+    "image": "johnisadaptive/services-zeromq-server",
+    "cpu": 500,
+    "memory": 600,
+    "essential": true,
+    "portMappings": [
+      {
+        "containerPort": 8080,
+        "hostPort": 8083
+      }
+    ],
+    "environment": [
+        {
+          "name": "ZMQ_PORT",
+          "value": "8080"
+        }
+      ]
+
+  }
+]
