@@ -1,0 +1,18 @@
+---
+- hosts: all
+  sudo: yes
+  remote_user: ec2-user
+  gather_facts: True
+
+  vars_files:
+    - playbooks/vars/vars.yml
+
+
+  tasks:
+
+    - include: playbooks/tasks/rpms.yml
+
+    - include: playbooks/tasks/java.yml
+
+    - include: playbooks/tasks/zookeeper.yml
+

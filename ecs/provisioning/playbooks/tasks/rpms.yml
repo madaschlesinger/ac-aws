@@ -1,0 +1,14 @@
+---
+
+    - copy: src="../../../mesos-cloud/mesos-software/rpms/cloudera-cdh-4-0.x86_64.rpm" dest=/tmp/
+
+    - name: Check if zookeeper EPEL Repo is installed
+      command: rpm -q cloudera-cdh-4-0
+      register: rpm_check_zookeeper_repo
+      failed_when: false
+      changed_when: false
+
+    - name: Execute script if Zookeeper is not installed
+      command: rpm -Uvh /tmp/cloudera-cdh-4-0.x86_64.rpm
+      when: rpm_check_zookeeper_repo.stdout.find('is not installed') != -1
+

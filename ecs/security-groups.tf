@@ -94,6 +94,13 @@ resource "aws_security_group" "shared-services" {
       protocol = "tcp"
       cidr_blocks = ["0.0.0.0/0"]
   }
+  ingress {
+      from_port = 2181
+      to_port = 2181
+      protocol = "tcp"
+      cidr_blocks = ["10.0.1.0/24"]
+  }
+
 
   egress {
       from_port = 0

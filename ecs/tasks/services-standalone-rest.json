@@ -1,6 +1,6 @@
 [
   {
-    "name": "java-cloud",
+    "name": "services-standalone-rest",
     "image": "johnisadaptive/services-standalone-rest",
     "cpu": 400,
     "memory": 400,
