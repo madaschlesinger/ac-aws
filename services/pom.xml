@@ -7,6 +7,8 @@
     <properties>
         <spring.boot.version>1.3.3.RELEASE</spring.boot.version>
         <curator.version>2.10.0</curator.version>
+        <zmq.version>0.3.5</zmq.version>
+        <jgroups.version>3.6.8.Final</jgroups.version>
         <junit.version>4.12</junit.version>
     </properties>
 
@@ -19,6 +21,7 @@
         <module>standalone-rest</module>
         <module>indexed-rest</module>
         <module>zeromq</module>
+        <module>jgroups</module>
     </modules>
 
     <dependencies>

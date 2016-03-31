@@ -34,7 +34,6 @@ public class SampleController implements AutoCloseable {
     }
 
     public static void main(String[] args) throws Exception {
-
         SpringApplication.run(SampleController.class, args);
     }
 }
