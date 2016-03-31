@@ -1,0 +1,22 @@
+[
+  {
+    "name": "services-jgroups-rest",
+    "image": "johnisadaptive/services-jgroups-rest",
+    "cpu": 400,
+    "memory": 400,
+    "essential": true,
+    "portMappings": [
+      {
+        "containerPort": 8080,
+        "hostPort": 8080
+      }
+    ],
+    "environment": [
+        {
+          "name": "JGROUPS_CLUSTER_NAME",
+          "value": "TestCluster"
+        }
+      ]
+
+  }
+]
