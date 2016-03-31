@@ -18,6 +18,7 @@
     <modules>
         <module>standalone-rest</module>
         <module>indexed-rest</module>
+        <module>zeromq</module>
     </modules>
 
     <dependencies>
