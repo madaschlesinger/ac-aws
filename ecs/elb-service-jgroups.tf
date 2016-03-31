@@ -5,7 +5,7 @@ resource "aws_elb" "java-service-jgroups" {
   security_groups = ["${aws_security_group.ELBS.id}"]
 
   listener {
-    instance_port = 8081
+    instance_port = 8080
     instance_protocol = "http"
     lb_port = 80
     lb_protocol = "http"
@@ -15,7 +15,7 @@ resource "aws_elb" "java-service-jgroups" {
     healthy_threshold = 2
     unhealthy_threshold = 2
     timeout = 3
-    target = "HTTP:8081/"
+    target = "HTTP:8080/"
     interval = 30
   }
 
