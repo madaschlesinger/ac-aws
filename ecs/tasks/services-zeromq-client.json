@@ -3,22 +3,22 @@
     "name": "services-zeromq-client",
     "image": "johnisadaptive/services-zeromq-client",
     "cpu": 400,
-    "memory": 400,
+    "memory": 300,
     "essential": true,
     "portMappings": [
       {
         "containerPort": 8080,
-        "hostPort": 8082
+        "hostPort": 8085
       }
     ],
     "environment": [
         {
           "name": "ZMQ_HOSTNAME",
-          "value": "zeromq-server.dev.internal.jpmorgan.com:8080"
+          "value": "zeromq-server.dev.internal.jpmorgan.com"
         },
         {
           "name": "ZMQ_PORT",
-          "value": "8080"
+          "value": "8084"
         }
       ]
 
