@@ -5,7 +5,7 @@ resource "aws_elb" "java-service-jgroups" {
   security_groups = ["${aws_security_group.ELBS.id}"]
 
   listener {
-    instance_port = 8080
+    instance_port = 8082
     instance_protocol = "http"
     lb_port = 80
     lb_protocol = "http"
