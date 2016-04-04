@@ -8,7 +8,7 @@ resource "aws_ecs_service" "services-zeromq-server" {
   load_balancer {
     elb_name = "${aws_elb.java-zeromq-server.id}"
     container_name = "services-zeromq-server"
-    container_port = 8080
+    container_port = 8084
   }
 
 }
