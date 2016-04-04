@@ -6,15 +6,15 @@ resource "aws_ecs_service" "services-dependent-rest" {
   iam_role = "${aws_iam_role.terraform_ecs_instance.arn}"
 
   load_balancer {
-    elb_name = "${aws_elb.java-zeromq-client.id}"
-    container_name = "services-zeromq-client"
+    elb_name = "${aws_elb.java-service-dependent.id}"
+    container_name = "services-dependent-rest"
     container_port = 8080
   }
 
 }
 
 resource "aws_ecs_task_definition" "services-dependent-rest" {
-  family = "services-zeromq-client"
+  family = "services-dependent-rest"
   container_definitions = "${file("tasks/services-dependent-rest.json")}"
 
 }
