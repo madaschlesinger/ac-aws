@@ -5,7 +5,7 @@
   gather_facts: True
 
   vars_files:
-    - playbooks/vars/vars.yml
+    - ./playbooks/vars/vars.yml
 
 
   tasks:

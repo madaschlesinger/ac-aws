@@ -1,6 +1,7 @@
 ---
 
-    - copy: src="../../../mesos-cloud/mesos-software/rpms/cloudera-cdh-4-0.x86_64.rpm" dest=/tmp/
+    - name: Get Zookeeper Executable
+      get_url: url=https://archive.cloudera.com/cdh4/one-click-install/redhat/6/x86_64/cloudera-cdh-4-0.x86_64.rpm dest=/tmp
 
     - name: Check if zookeeper EPEL Repo is installed
       command: rpm -q cloudera-cdh-4-0
