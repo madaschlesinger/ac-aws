@@ -19,6 +19,7 @@
 
     <modules>
         <module>standalone-rest</module>
+        <module>dependent-rest</module>
         <module>indexed-rest</module>
         <module>zeromq</module>
         <module>jgroups</module>
