@@ -6,8 +6,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.concurrent.TimeoutException;
-
 @Controller
 @EnableAutoConfiguration
 public class SampleController {
@@ -29,7 +27,7 @@ public class SampleController {
         try {
             String output = client.request(input, TIMEOUT);
             return String.format("Success: %s", output);
-        } catch (TimeoutException e) {
+        } catch (Exception e) {
             return "Failure";
         }
     }

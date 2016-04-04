@@ -17,21 +17,27 @@ public class Client {
         this.port = port;
     }
 
-    public String request(String input, int timeoutSecond) throws TimeoutException {
-        ZContext context = new ZContext();
-        Socket socket = context.createSocket(ZMQ.DEALER);
-        String address = String.format("tcp://%s:%d", hostname, port);
-        socket.connect(address);
+    public String request(String input, int timeoutSecond) throws Exception {
+        try {
+            ZContext context = new ZContext();
+            Socket socket = context.createSocket(ZMQ.DEALER);
+            String address = String.format("tcp://%s:%d", hostname, port);
+            socket.connect(address);
 
-        socket.send(input);
+            socket.send(input);
 
-        Poller poller = new ZMQ.Poller(1);
-        poller.register(socket, Poller.POLLIN);
-        if (poller.poll(timeoutSecond * 1000) == -1) {
-            throw new TimeoutException();
+            Poller poller = new ZMQ.Poller(1);
+            poller.register(socket, Poller.POLLIN);
+            if (poller.poll(timeoutSecond * 1000) == -1) {
+                throw new TimeoutException();
+            }
+            ZMsg message = ZMsg.recvMsg(socket);
+            String output = message.popString();
+            return output;
         }
-        ZMsg message = ZMsg.recvMsg(socket);
-        String output = message.popString();
-        return output;
+        catch (Exception e) {
+            System.out.println("Failed to request from server: " + e.getMessage());
+            throw e;
+        }
     }
 }
