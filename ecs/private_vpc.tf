@@ -61,17 +61,6 @@ resource "aws_route_table_association" "jumphost-route" {
 }
 
 
-resource "aws_subnet" "frontend" {
-    vpc_id = "${aws_vpc.terraform_vpc.id}"
-    availability_zone = "eu-west-1a"
-    cidr_block = "10.0.2.0/24"
-
-    tags {
-        Name = "Front End Web Services subnet"
-    }
-}
-
-
 resource "aws_subnet" "jumphosts"  {
     vpc_id = "${aws_vpc.terraform_vpc.id}"
     availability_zone = "eu-west-1a"
