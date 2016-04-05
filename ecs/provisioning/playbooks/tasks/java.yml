@@ -1,12 +1,13 @@
 ---
 
     - name: Download Oracle JRE from Oracle Website and Accept license agreement
-      get_url: url=http://download.oracle.com/otn-pub/java/jdk/8u77-b03/jre-8u77-linux-x64.rpm
-      headers: 'Cookie:oraclelicense=accept-securebackup-cookie'
-      dest=/tmp/
+      get_url: 
+        url=http://download.oracle.com/otn-pub/java/jdk/8u77-b03/jre-8u77-linux-x64.rpm
+        headers='Cookie:oraclelicense=accept-securebackup-cookie'
+        dest=/tmp/
 
 
-    - name: Execute script if Zookeeper is not installed
-      yum: name=/tmp/jre-8u77-linux-x64.rpm state=present
+    - name: Execute script if Java is not installed
+      yum: pkg=/tmp/jre-8u77-linux-x64.rpm state=present
 
 
