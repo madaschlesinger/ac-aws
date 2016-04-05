@@ -28,6 +28,12 @@ public class SampleController {
         }
     }
 
+    @RequestMapping("/health")
+    @ResponseBody
+    String health() {
+        return "healthy";
+    }
+
     public static void main(String[] args) {
         SpringApplication.run(SampleController.class, args);
     }
