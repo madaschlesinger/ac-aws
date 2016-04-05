@@ -5,7 +5,7 @@
   gather_facts: True
 
   vars_files:
-    - ./playbooks/vars/vars.yml
+    - playbooks/vars/vars.yml
 
 
   tasks:
@@ -15,4 +15,3 @@
     - include: playbooks/tasks/java.yml
 
     - include: playbooks/tasks/zookeeper.yml
-
