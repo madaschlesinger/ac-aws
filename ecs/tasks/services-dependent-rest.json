@@ -1,0 +1,22 @@
+[
+  {
+    "name": "services-dependent-rest",
+    "image": "johnisadaptive/services-dependent-rest",
+    "cpu": 400,
+    "memory": 300,
+    "essential": true,
+    "portMappings": [
+      {
+        "containerPort": 8080,
+        "hostPort": 8086
+      }
+    ],
+    "environment": [
+        {
+          "name": "ADDRESS",
+          "value": "service-standalone.dev.internal.jpmorgan.com"
+        }
+      ]
+
+  }
+]

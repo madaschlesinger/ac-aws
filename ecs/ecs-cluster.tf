@@ -5,9 +5,9 @@ resource "aws_ecs_cluster" "jpmc-ecs-cluster" {
 resource "aws_autoscaling_group" "terraform-ecs-cluster" {
     availability_zones = ["eu-west-1a"]
     name = "jpmc-ecs-cluster"
-    min_size = 3
-    max_size = 4
-    desired_capacity = 3
+    min_size = 4
+    max_size = 6
+    desired_capacity = 4
     health_check_type = "EC2"
     launch_configuration = "${aws_launch_configuration.ecs.name}"
     vpc_zone_identifier = ["${aws_subnet.slaves.id}"]

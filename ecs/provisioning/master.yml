@@ -15,4 +15,3 @@
     - include: playbooks/tasks/java.yml
 
     - include: playbooks/tasks/zookeeper.yml
-

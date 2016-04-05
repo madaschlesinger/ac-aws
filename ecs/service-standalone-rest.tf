@@ -19,3 +19,10 @@ resource "aws_ecs_task_definition" "services-standalone-rest" {
 
 }
 
+resource "aws_route53_record" "service-standalone" {
+   zone_id = "${aws_route53_zone.dev.zone_id}"
+   name = "service-standalone"
+   type = "CNAME"
+   ttl = "300"
+   records = ["${aws_elb.java-service-standalone.dns_name}"]
+}
