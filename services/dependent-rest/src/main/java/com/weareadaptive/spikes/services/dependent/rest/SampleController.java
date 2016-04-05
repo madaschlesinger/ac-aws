@@ -24,6 +24,12 @@ public class SampleController {
         return String.format("Dependent: %s", output);
     }
 
+    @RequestMapping("/health")
+    @ResponseBody
+    String health() {
+        return "healthy";
+    }
+
     public static void main(String[] args) throws Exception {
         SpringApplication.run(SampleController.class, args);
     }

@@ -10,6 +10,7 @@
         <zmq.version>0.3.5</zmq.version>
         <jgroups.version>3.6.8.Final</jgroups.version>
         <junit.version>4.12</junit.version>
+        <aws.version>1.10.66</aws.version>
     </properties>
 
     <groupId>com.weareadaptive.spikes.cloud.services</groupId>
@@ -23,6 +24,7 @@
         <module>indexed-rest</module>
         <module>zeromq</module>
         <module>jgroups</module>
+        <module>sqs</module>
     </modules>
 
     <dependencies>

@@ -1,4 +1,4 @@
-package com.weareadaptive.spikes.services.jgroups.rest;
+package com.weareadaptive.spikes.services.sqs.client;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -9,22 +9,22 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @EnableAutoConfiguration
 public class SampleController {
-    private static final String JGROUPS_CLUSTER_NAME_ENV = "JGROUPS_CLUSTER_NAME";
-    private final Replicator replicator;
+    private static final String QUEUE_NAME_ENV = "QUEUE_NAME";
+    private final SqsClient client;
 
-    public SampleController() throws Exception {
-        String clusterName = System.getenv(JGROUPS_CLUSTER_NAME_ENV);
-        replicator = new Replicator(clusterName);
+    public SampleController() {
+        String queueName = System.getenv(QUEUE_NAME_ENV);
+        client = new SqsClient(queueName);
     }
 
     @RequestMapping("/")
     @ResponseBody
     String home() {
         try {
-            replicator.replicate();
-            return "replicated";
+            client.send("Test");
+            return "Sent";
         } catch (Exception e) {
-            return "failed";
+            return "Failed";
         }
     }
 
@@ -34,7 +34,7 @@ public class SampleController {
         return "healthy";
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         SpringApplication.run(SampleController.class, args);
     }
 }
