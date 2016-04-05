@@ -2,7 +2,7 @@
   {
     "name": "services-dependent-rest",
     "image": "johnisadaptive/services-dependent-rest",
-    "cpu": 400,
+    "cpu": 200,
     "memory": 300,
     "essential": true,
     "portMappings": [
@@ -14,7 +14,7 @@
     "environment": [
         {
           "name": "ADDRESS",
-          "value": "service-standalone.dev.internal.jpmorgan.com"
+          "value": "http://service-standalone.dev.internal.jpmorgan.com"
         }
       ]
 
