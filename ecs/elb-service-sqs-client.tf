@@ -1,6 +1,6 @@
 # Create a new load balancer
-resource "aws_elb" "java-sqs-server" {
-  name = "service-sqs-server"
+resource "aws_elb" "java-sqs-client" {
+  name = "service-elb-sqs-client"
   subnets = ["${aws_subnet.ELBS.id}"]
   security_groups = ["${aws_security_group.ELBS.id}"]
 
@@ -14,8 +14,8 @@ resource "aws_elb" "java-sqs-server" {
   health_check {
     healthy_threshold = 2
     unhealthy_threshold = 2
-    timeout = 3
-    target = "HTTP:8087/"
+    timeout = 3 
+    target = "HTTP:8087/health"
     interval = 30
   }
 

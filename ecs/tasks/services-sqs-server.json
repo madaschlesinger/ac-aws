@@ -5,12 +5,6 @@
     "cpu": 400,
     "memory": 400,
     "essential": true,
-    "portMappings": [
-      {
-        "containerPort": 8080,
-        "hostPort": 8087
-      }
-    ],
     "environment": [
         {
           "name": "QUEUE_NAME",
