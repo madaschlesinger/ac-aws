@@ -15,7 +15,7 @@ resource "aws_elb" "java-service-dependent" {
     healthy_threshold = 2
     unhealthy_threshold = 2
     timeout = 3
-    target = "HTTP:8086/"
+    target = "HTTP:8086/health"
     interval = 30
   }
 
