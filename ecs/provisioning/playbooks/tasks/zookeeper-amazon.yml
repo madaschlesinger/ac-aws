@@ -1,0 +1,16 @@
+---
+
+    - name: Install Zookeeper
+      yum: pkg={{item}} state=latest update_cache=yes
+      with_items:
+      - zookeeper
+
+    - name: Init.d script.
+      template: src=./playbooks/templates/zookeeper-initd.sh dest=/etc/init.d/zookeeper
+
+    - shell: chmod +x /etc/init.d/zookeeper 
+
+    - shell: chkconfig zookeeper on
+
+    - name: zoo.cfg
+      template: src=./playbooks/templates/zookeeper.cfg.j2 dest=/etc/zookeeper/conf/zoo.cfg
