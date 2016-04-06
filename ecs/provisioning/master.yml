@@ -14,4 +14,8 @@
 
     - include: playbooks/tasks/java.yml
 
-    - include: playbooks/tasks/zookeeper.yml
+    - include: playbooks/tasks/zookeeper-amazon.yml
+      when: ansible_distribution  == "Amazon"
+
+    - include: playbooks/tasks/zookeeper-redhat.yml
+      when: ansible_distribution == "RedHat"
