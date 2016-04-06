@@ -25,6 +25,7 @@
         <module>zeromq</module>
         <module>jgroups</module>
         <module>sqs</module>
+        <module>s3</module>
     </modules>
 
     <dependencies>
