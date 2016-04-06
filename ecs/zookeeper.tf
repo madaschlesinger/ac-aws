@@ -1,12 +1,11 @@
 # Need to create an Internal Network Interface and register a record into Route53
 
 resource "aws_instance" "zookeeper" {
-    ami = "ami-8b8c57f8"
+    ami = "ami-225ada51"
     instance_type = "t2.micro"
     key_name = "${var.aws_key_name}"
     security_groups = ["${aws_security_group.shared-services.id}"]
     subnet_id = "${aws_subnet.shared-services.id}"
-    associate_public_ip_address = true
     tags {
         Name = "Zookeeper"
     }
