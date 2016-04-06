@@ -32,7 +32,7 @@ resource "aws_route_table" "nat" {
     vpc_id = "${aws_vpc.terraform_vpc.id}"
     route {
         cidr_block = "0.0.0.0/0"
-        gateway_id = "${aws_nat_gateway.gw.id}"
+        instance_id = "${aws_instance.nat.id}"
     }
 
     tags {
@@ -70,3 +70,4 @@ resource "aws_subnet" "jumphosts"  {
         Name = "JumpHosts subnet"
     }
 }
+

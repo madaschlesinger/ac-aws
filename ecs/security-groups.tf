@@ -47,7 +47,7 @@ resource "aws_security_group" "slaves" {
       from_port = 0
       to_port = 0 
       protocol = "-1"
-      cidr_blocks = ["0.0.0.0/0"]
+      cidr_blocks = ["10.0.1.0/24","10.0.2.0/24","10.0.3.0/24","10.0.4.0/24","10.0.5.0/24"]
   }
 
   egress {
@@ -82,11 +82,27 @@ resource "aws_security_group" "ELBS" {
       from_port = 0
       to_port = 0
       protocol = "-1"
-      cidr_blocks = ["0.0.0.0/0"]
-      from_port = 0
-      to_port = 0
-      protocol = "-1"
       cidr_blocks = ["10.0.1.0/24"]
+  }
+}
+
+resource "aws_security_group" "NAT-Gateway" {
+  name = "NAT Gateway"
+  description = "NAT Gateway allow to go out but NOT in"
+  vpc_id = "${aws_vpc.terraform_vpc.id}"
+
+  ingress{
+      from_port = 0 
+      to_port = 0 
+      protocol = "-1"
+      cidr_blocks = ["10.0.1.0/24","10.0.2.0/24","10.0.3.0/24","10.0.4.0/24","10.0.5.0/24"]
+  }
+
+  egress {
+      from_port = 0 
+      to_port = 0 
+      protocol = -1 
+      cidr_blocks = ["0.0.0.0/0"]
   }
 }
 
@@ -113,11 +129,6 @@ resource "aws_security_group" "shared-services" {
       from_port = 0
       to_port = 0
       protocol = "-1"
-      cidr_blocks = ["0.0.0.0/0"]
-      from_port = 0
-      to_port = 0
-      protocol = "-1"
-      cidr_blocks = ["10.0.1.0/24"]
+      cidr_blocks = ["10.0.1.0/24","10.0.2.0/24","10.0.3.0/24","10.0.4.0/24"]
   }
 }
-
