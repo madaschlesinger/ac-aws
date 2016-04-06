@@ -22,6 +22,17 @@
       ]
     },
    {
+      "type": "file",
+      "source": "scripts/zookeeper-configure.sh",
+      "destination": "/tmp/zookeeper-configure"
+   },
+   {
+      "type": "shell",
+      "inline": [
+        "sudo mv /tmp/zookeeper-configure /etc/init.d && chmod +x /etc/init.d/zookeeper-configure && sudo chkconfig zookeeper-configure on"
+      ]
+    },
+   {
       "type": "ansible-local",
       "playbook_file": "../provisioning/master.yml",
       "playbook_dir": "../provisioning"
