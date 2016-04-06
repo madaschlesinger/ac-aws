@@ -1,0 +1,22 @@
+[
+  {
+    "name": "services-s3-rest",
+    "image": "johnisadaptive/services-s3-rest",
+    "cpu": 200,
+    "memory": 300,
+    "essential": true,
+    "portMappings": [
+      {
+        "containerPort": 8080,
+        "hostPort": 8088
+      }
+    ],
+    "environment": [
+        {
+          "name": "S3_ADDRESS",
+          "value": "http://services-storage.dev.internal.jpmorgan.com"
+        }
+      ]
+
+  }
+]
