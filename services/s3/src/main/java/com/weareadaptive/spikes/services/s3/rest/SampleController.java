@@ -17,7 +17,7 @@ import java.io.InputStream;
 @Controller
 @EnableAutoConfiguration
 public class SampleController {
-    private static final String BUCKET_NAME_ENV = "S3_ADDRESS";
+    private static final String BUCKET_NAME_ENV = "S3_BUCKET";
 
     private S3Facade s3Facade;
 
