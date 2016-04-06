@@ -5,15 +5,11 @@ import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.ObjectListing;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.amazonaws.services.s3.model.*;
 import com.amazonaws.util.StringInputStream;
 import org.springframework.util.MultiValueMap;
 
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.util.List;
 
 /**
@@ -30,20 +26,29 @@ public class S3Facade {
         s3client.setRegion(region);
     }
 
-    public String getData() {
-        ObjectListing objects = s3client.listObjects(bucketName);
-        List<S3ObjectSummary> objectSummaries = objects.getObjectSummaries();
-        for (S3ObjectSummary objectSummary : objectSummaries) {
-            return objectSummary.getKey();
+    public String getData(String path) {
+        try {
+            if (!s3client.doesObjectExist(bucketName, path)) {
+                return "No data here";
+            }
+
+            S3Object data = s3client.getObject(new GetObjectRequest(bucketName, path));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(data.getObjectContent()));
+            StringBuilder out = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                out.append(line);
+            }
+            reader.close();
+            return out.toString();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        return "no objects found";
     }
 
     public void setData(String path, MultiValueMap parameters) {
         try {
-            
             InputStream data = new StringInputStream(parameters.toString());
-
             ObjectMetadata metaData = new ObjectMetadata();
             s3client.putObject(new PutObjectRequest(bucketName, path, data, metaData));
         } catch (UnsupportedEncodingException e) {

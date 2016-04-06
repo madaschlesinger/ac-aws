@@ -29,9 +29,11 @@ public class SampleController {
     @RequestMapping("/**")
     @ResponseBody
     String home(@RequestParam MultiValueMap parameters, HttpServletRequest request) {
-        String path = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
-        s3Facade.setData(path.substring(1), parameters);
-        return s3Facade.getData();
+        String path = request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE).toString().substring(1);
+        if (!parameters.isEmpty()) {
+            s3Facade.setData(path, parameters);
+        }
+        return s3Facade.getData(path);
     }
 
     @RequestMapping("/health")
