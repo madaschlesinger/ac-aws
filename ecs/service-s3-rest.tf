@@ -19,3 +19,12 @@ resource "aws_ecs_task_definition" "services-s3-rest" {
 
 }
 
+resource "aws_s3_bucket" "bucket" {
+    bucket = "adaptive-bucket"
+    acl = "private"
+    region = "eu-west-1"
+
+    tags {
+        Name = "Persistent storage for services"
+    }
+}
