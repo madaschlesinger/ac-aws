@@ -10,6 +10,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.amazonaws.util.StringInputStream;
+import org.springframework.util.MultiValueMap;
 
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -38,11 +39,13 @@ public class S3Facade {
         return "no objects found";
     }
 
-    public void setData() {
+    public void setData(String path, MultiValueMap parameters) {
         try {
-            InputStream data = new StringInputStream("Hello");
+            
+            InputStream data = new StringInputStream(parameters.toString());
+
             ObjectMetadata metaData = new ObjectMetadata();
-            s3client.putObject(new PutObjectRequest(bucketName, "key", data, metaData));
+            s3client.putObject(new PutObjectRequest(bucketName, path, data, metaData));
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }

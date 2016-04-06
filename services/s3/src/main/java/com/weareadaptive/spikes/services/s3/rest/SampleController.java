@@ -5,9 +5,13 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.HandlerMapping;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.InputStream;
 
 @Controller
@@ -22,14 +26,13 @@ public class SampleController {
         s3Facade = new S3Facade(bucketName);
     }
 
-    @RequestMapping("/")
+    @RequestMapping("/**")
     @ResponseBody
-    String home() {
-        s3Facade.setData();
+    String home(@RequestParam MultiValueMap parameters, HttpServletRequest request) {
+        String path = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+        s3Facade.setData(path.substring(1), parameters);
         return s3Facade.getData();
     }
-
-
 
     @RequestMapping("/health")
     @ResponseBody
