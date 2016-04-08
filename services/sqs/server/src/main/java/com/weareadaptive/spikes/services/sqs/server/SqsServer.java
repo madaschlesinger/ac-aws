@@ -15,8 +15,7 @@ public class SqsServer {
     private final String queueUrl;
 
     public SqsServer(String queueName) {
-        AWSCredentials credentials = new InstanceProfileCredentialsProvider().getCredentials();
-        syncClient = new AmazonSQSClient(credentials);
+        syncClient = new AmazonSQSClient(new InstanceProfileCredentialsProvider());
         Region region = Region.getRegion(Regions.EU_WEST_1);
         syncClient.setRegion(region);
         queueUrl = syncClient.getQueueUrl(queueName).getQueueUrl();

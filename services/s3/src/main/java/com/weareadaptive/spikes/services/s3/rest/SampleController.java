@@ -1,7 +1,5 @@
 package com.weareadaptive.spikes.services.s3.rest;
 
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
@@ -12,7 +10,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.HandlerMapping;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.InputStream;
 
 @Controller
 @EnableAutoConfiguration
@@ -26,9 +23,19 @@ public class SampleController {
         s3Facade = new S3Facade(bucketName);
     }
 
+    public static void main(String[] args) {
+        SpringApplication.run(SampleController.class, args);
+    }
+
+    @RequestMapping("/")
+    @ResponseBody
+    String home() {
+        return "<h1>S3 data test</h1>Example usages<ul><li>To write data - your/data/path?field1=data1&field2=data2</li><li>To read data - your/data/path</li></ul>'";
+    }
+
     @RequestMapping("/**")
     @ResponseBody
-    String home(@RequestParam MultiValueMap parameters, HttpServletRequest request) {
+    String data(@RequestParam MultiValueMap parameters, HttpServletRequest request) {
         String path = request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE).toString().substring(1);
         if (!parameters.isEmpty()) {
             s3Facade.setData(path, parameters);
@@ -40,9 +47,5 @@ public class SampleController {
     @ResponseBody
     String health() {
         return "healthy";
-    }
-
-    public static void main(String[] args) {
-        SpringApplication.run(SampleController.class, args);
     }
 }
