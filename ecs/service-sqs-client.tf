@@ -15,7 +15,7 @@ resource "aws_ecs_service" "services-sqs-client" {
 
 resource "aws_ecs_task_definition" "services-sqs-client" {
   family = "services-sqs-client"
-  container_definitions = "${file("tasks/services-sqs-client.json")}"
+  container_definitions = "${file("./tasks/services-sqs-client.json")}"
 
 }
 
