@@ -1,7 +1,7 @@
 package com.weareadaptive.spikes.services.sqs.server;
 
 import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
+import com.amazonaws.auth.InstanceProfileCredentialsProvider;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.sqs.AmazonSQSClient;
@@ -15,7 +15,7 @@ public class SqsServer {
     private final String queueUrl;
 
     public SqsServer(String queueName) {
-        AWSCredentials credentials = new EnvironmentVariableCredentialsProvider().getCredentials();
+        AWSCredentials credentials = new InstanceProfileCredentialsProvider().getCredentials();
         syncClient = new AmazonSQSClient(credentials);
         Region region = Region.getRegion(Regions.EU_WEST_1);
         syncClient.setRegion(region);
