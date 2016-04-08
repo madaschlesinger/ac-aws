@@ -15,7 +15,7 @@ resource "aws_ecs_service" "services-jgroups-rest" {
 
 resource "aws_ecs_task_definition" "services-jgroups-rest" {
   family = "services-jgroups-rest"
-  container_definitions = "${file("tasks/services-jgroups-rest.json")}"
+  container_definitions = "${file("./tasks/services-jgroups-rest.json")}"
 
 }
 

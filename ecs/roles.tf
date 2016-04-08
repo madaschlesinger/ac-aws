@@ -1,18 +1,18 @@
 resource "aws_iam_role" "terraform_ecs_instance" {
     name = "terraform_ecs_instance"
-    assume_role_policy = "${file("policies/ecs-role.json")}"
+    assume_role_policy = "${file("./policies/ecs-role.json")}"
 }
 
 resource "aws_iam_role_policy" "terraform_ecs_instance_role_policy" {
   name     = "ecs_instance_role_policy"
-  policy   = "${file("policies/AmazonEC2ContainerServiceRole.json")}"
+  policy   = "${file("./policies/AmazonEC2ContainerServiceRole.json")}"
   role     = "${aws_iam_role.terraform_ecs_instance.id}"
 }
 
 resource "aws_iam_policy" "sqs-policy" {
     name = "sqs-policy"
     description = "SQS policy to avoid storing credentials to access that"
-    policy =   "${file("policies/SQSFullAccessRole.json")}" 
+    policy =   "${file("./policies/SQSFullAccessRole.json")}" 
 }
 
 resource "aws_iam_policy_attachment" "sqs-policy-attachment" {

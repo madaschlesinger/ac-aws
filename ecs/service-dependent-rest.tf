@@ -15,7 +15,7 @@ resource "aws_ecs_service" "services-dependent-rest" {
 
 resource "aws_ecs_task_definition" "services-dependent-rest" {
   family = "services-dependent-rest"
-  container_definitions = "${file("tasks/services-dependent-rest.json")}"
+  container_definitions = "${file("./tasks/services-dependent-rest.json")}"
 
 }
 

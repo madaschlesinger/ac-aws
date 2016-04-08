@@ -15,7 +15,7 @@ resource "aws_ecs_service" "services-zeromq-server" {
 
 resource "aws_ecs_task_definition" "services-zeromq-server" {
   family = "services-zeromq-server"
-  container_definitions = "${file("tasks/services-zeromq-server.json")}"
+  container_definitions = "${file("./tasks/services-zeromq-server.json")}"
 
 }
 
