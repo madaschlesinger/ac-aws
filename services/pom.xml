@@ -26,6 +26,7 @@
         <module>jgroups</module>
         <module>sqs</module>
         <module>s3</module>
+        <module>efs</module>
     </modules>
 
     <dependencies>
