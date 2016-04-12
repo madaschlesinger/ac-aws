@@ -26,10 +26,13 @@
 hs_err_pid*
 
 #AWS Login script - including secrets
-**/cloud-login.sh
+cloud-login.sh
 
 # Packer Access and Secret Keys
-**/packer.vars
+packer.vars
 
 ## Terraform Config for ACCESS and SECRET KEYS
-**/terraform.tfvars
+terraform.tfvars
+
+## All Terraform get resources
+**/.terraform
