@@ -30,3 +30,6 @@ hs_err_pid*
 
 # Packer Access and Secret Keys
 **/packer.vars
+
+## Terraform Config for ACCESS and SECRET KEYS
+**/terraform.tfvars
