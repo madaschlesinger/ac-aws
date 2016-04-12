@@ -27,3 +27,6 @@ hs_err_pid*
 
 #AWS Login script - including secrets
 **/cloud-login.sh
+
+# Packer Access and Secret Keys
+**/packer.vars
