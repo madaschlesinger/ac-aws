@@ -1,13 +1,12 @@
-{% for host in groups[master] %}
 {
 
     "bootstrap": false,
-    "server": true,
+    "server": false,
     "datacenter": "dc1",
+    "ui_dir": "/home/ec2-user/dist",
     "data_dir": "/var/consul",
     "log_level": "INFO",
     "enable_syslog": true,
-    "start_join": ["{{ hostvars[host]['ec2_private_ip_address']}}"],
+    "start_join": ["MASTER"],
     "enable_syslog": true
 }
-{% endfor %}

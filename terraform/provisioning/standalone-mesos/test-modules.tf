@@ -11,13 +11,12 @@ provider "aws" {
 }
 
 
-module "ecs" {
-    source = "../../modules/ecs/"
+module "mesos" {
+    source = "../../modules/mesos"
     aws_access_key = "${var.aws_access_key}"
     aws_secret_key = "${var.aws_secret_key}"
     aws_region     = "eu-west-1"
     aws_key_name   = "ec2-user"
     instance_type  = "t2.micro"
-    sec_groups_ecs = "10.0.1.0/16"
-    
+    sec_groups_mesos = "10.1.1.0/16"
 }

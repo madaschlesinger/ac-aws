@@ -50,6 +50,16 @@ resource "aws_subnet" "mesos_slaves" {
     }
 }
 
+resource "aws_subnet" "master" {
+    vpc_id = "${aws_vpc.mesos.id}"
+    availability_zone = "eu-west-1a"
+    cidr_block = "10.1.7.0/24"
+
+    tags {
+        Name = "Main_Terraform_vpc_mesos_masters"
+    }
+}
+
 resource "aws_route_table_association" "jumphost-route" {
     subnet_id = "${aws_subnet.jumphosts.id}"
     route_table_id = "${aws_route_table.r.id}"

@@ -1,5 +1,5 @@
 ---
-- hosts: '{{ hosts }}'
+- hosts: localhost
   sudo: yes
   remote_user: ec2-user
   gather_facts: True
@@ -26,10 +26,10 @@
     - template: src="templates/mesos.zk.j2" dest="/etc/mesos/zk"
       notify: RestartMesosSlave
 
-    - template: src="templates/external_ip.j2" dest="/etc/mesos-slave/hostname"
+    - template: src="templates/external_ip_packer.j2" dest="/etc/mesos-slave/hostname"
       notify: RestartMesosSlave
 
-    - template: src="templates/internal_ip.j2" dest="/etc/mesos-slave/ip"
+    - template: src="templates/internal_ip_packer.j2" dest="/etc/mesos-slave/ip"
       notify: RestartMesosSlave
 
     - name: Create file

@@ -5,12 +5,6 @@
     - name: Systemd script.
       template: src=../templates/weave.service.j2 dest=/usr/lib/systemd/system/weave.service
 
-    - service : name=weave state=started enabled=yes
-
-    - wait_for: path=/var/run/weave/weave.sock delay=10
-
-    - wait_for: path=/proc/sys/net/ipv4/conf/weave delay=10
-
     - name: Create file for Integration Mesos/Weave
       command: touch /etc/mesos-slave/docker_socket
       args:

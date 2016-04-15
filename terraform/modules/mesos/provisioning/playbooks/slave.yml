@@ -1,0 +1,60 @@
+---
+- hosts: localhost
+  sudo: yes
+  remote_user: ec2-user
+  gather_facts: True
+
+  vars_files:
+    - vars/vars.yml
+
+
+  tasks:
+
+    - include: tasks/rpms.yml
+
+    - include: tasks/docker.yml
+
+    - include: tasks/mesos.yml
+
+    - include: tasks/weave-slave.yml
+      when: weave_enabled == "True"
+
+    - include: tasks/consul-slave.yml
+      when: consul_enabled == "True"
+
+
+    - template: src="templates/mesos.zk.j2" dest="/etc/mesos/zk"
+      notify: RestartMesosSlave
+
+    - template: src="templates/external_ip.j2" dest="/etc/mesos-slave/hostname"
+      notify: RestartMesosSlave
+
+    - template: src="templates/internal_ip.j2" dest="/etc/mesos-slave/ip"
+      notify: RestartMesosSlave
+
+    - name: Create file
+      command: touch /etc/mesos-slave/containerizers
+      args:
+       creates: /etc/mesos-slave/containerizers
+    - lineinfile: dest=/etc/mesos-slave/containerizers state=present line="docker,mesos"
+      notify: RestartMesosSlave
+
+    - name: Create file
+      command: touch /etc/mesos-slave/executor_registration_timeout
+      args:
+       creates: /etc/mesos-slave/executor_registration_timeout
+    - lineinfile: dest=/etc/mesos-slave/executor_registration_timeout state=present line="5mins"
+      notify: RestartMesosSlave
+
+    - service : name=mesos-master state=stopped enabled=no
+
+  handlers:
+    - name: "RestartMesosSlave"
+      service : name=mesos-slave state=restarted enabled=yes
+
+    - name: "DockerRestart"
+      service : name=docker state=restarted enabled=yes
+
+
+    - name: Recap
+      debug: var=hostvars[inventory_hostname]

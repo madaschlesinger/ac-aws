@@ -12,9 +12,9 @@
 
     - include: tasks/rpms.yml
 
-    - include: tasks/zookeeper.yml
+    - include: tasks/zookeeper_packer.yml
  
-    - include: tasks/marathon.yml
+    - include: tasks/marathon_packer.yml
 
     - include: tasks/mesos.yml
 
@@ -37,19 +37,4 @@
     - include: tasks/spark.yml
       when: spark_enabled == "True"
 
-    - service : name=mesos-master state=started enabled=yes
-   
-    - service : name=mesos-slave state=stopped enabled=no
-
-    - name: Recap
-      debug: var=hostvars[inventory_hostname]
-
-    - name: Instructions Mesos
-      debug: msg="Login into Mesos Console http://{{ ec2_dns_name }}:5050"
-
-    - name: Instructions Marathon
-      debug: msg="Login into Marathon Console http://{{ ec2_dns_name }}:8080"
-  
-  handlers:
-    - name: "DockerRestart"
-      service : name=docker state=restarted enabled=yes
+    - service: name=mesos-slave state=stopped enabled=no

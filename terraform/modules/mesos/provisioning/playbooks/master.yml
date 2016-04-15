@@ -1,0 +1,40 @@
+---
+- hosts: all
+  sudo: yes
+  remote_user: ec2-user
+  gather_facts: True
+
+  vars_files:
+    - vars/vars.yml
+
+
+  tasks:
+
+    - include: tasks/rpms.yml
+
+    - include: tasks/zookeeper.yml
+ 
+    - include: tasks/marathon_packer.yml
+
+    - include: tasks/mesos.yml
+
+    - include: tasks/docker.yml
+
+    - include: tasks/weave-master.yml
+      when: weave_enabled == "True"
+
+    - include: tasks/consul-master.yml
+      when: consul_enabled == "True"
+      tags:
+        - consul
+
+    - include: tasks/registry.yml
+      when: registry_enabled == "True"
+
+    - include: tasks/marathon-lb.yml
+      when: haproxy_enabled == "True"
+  
+    - include: tasks/spark.yml
+      when: spark_enabled == "True"
+
+    - service: name=mesos-slave state=stopped enabled=no

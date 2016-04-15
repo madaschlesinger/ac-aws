@@ -1,0 +1,9 @@
+---
+
+    - name: Install Marathon 
+      yum: pkg={{item}} state=latest update_cache=yes
+      with_items:
+      - marathon
+
+    - file: path=/etc/marathon/conf state=directory mode=0744 owner=ec2-user
+    - template : src="../templates/external_ip_packer.j2" dest="/etc/marathon/conf/hostname"

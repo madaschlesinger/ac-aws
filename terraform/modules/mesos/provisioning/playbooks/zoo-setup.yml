@@ -1,0 +1,16 @@
+---
+- hosts: all
+  sudo: yes
+  remote_user: ec2-user
+  gather_facts: True
+
+  vars_files:
+    - vars/vars.yml
+
+
+  tasks:
+
+    - include: tasks/rpms.yml
+
+    - include: tasks/zookeeper.yml
+ 

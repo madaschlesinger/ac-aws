@@ -1,0 +1,12 @@
+[Unit]
+Description=Zookeeper
+After=docker.service
+Wants=docker.service
+
+[Service]
+ExecStart=/usr/local/bin/weave launch MASTER
+Restart=always
+RestartSec=20
+
+[Install]
+WantedBy=multi-user.target

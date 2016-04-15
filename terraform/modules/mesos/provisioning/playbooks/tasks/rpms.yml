@@ -1,8 +1,14 @@
 ---
 
-    - copy: src="../../rpms/cloudera-cdh-4-0.x86_64.rpm" dest=/tmp/
-    - copy: src="../../rpms/mesosphere-el-repo-7-3.noarch.rpm" dest="/tmp"
-    - copy: src="../../rpms/epel-release-latest-7.noarch.rpm" dest="/tmp"
+    - name: Get Zookeeper Executable
+      get_url: url=https://archive.cloudera.com/cdh4/one-click-install/redhat/6/x86_64/cloudera-cdh-4-0.x86_64.rpm dest=/tmp
+
+    - name: Get Mesosphere Executable
+      get_url: url=http://repos.mesosphere.io/el/7/noarch/RPMS/mesosphere-el-repo-7-3.noarch.rpm dest=/tmp
+
+    - name: Get EPEL
+      get_url: url=https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm dest=/tmp
+
 
     - name: Check if Mesosphere EPEL Repo is installed
       command: rpm -q mesosphere-el-repo-7-3

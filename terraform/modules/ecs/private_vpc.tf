@@ -74,3 +74,7 @@ output "terraform_vpc" {
 output "ecs-subnet" {
     value = "${aws_subnet.slaves.id}"
 }
+
+output "route-table-nat" {
+    value = " ${aws_route_table.nat.id}"
+}
