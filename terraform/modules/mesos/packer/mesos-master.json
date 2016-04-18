@@ -19,19 +19,30 @@
    {
       "type": "shell",
       "inline": [
-        "sleep 30",
-        "curl -O http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-5.noarch.rpm && sudo yum localinstall -y epel-release-7-5.noarch.rpm && sudo yum -y install python python-devel ansible"
+        "sleep 10",
+        "curl -O http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-6.noarch.rpm && sudo yum localinstall -y epel-release-7-6.noarch.rpm && sudo yum -y install python python-devel ansible"
       ]
     },
    {
       "type": "file",
-      "source": "scripts/user_data.sh",
-      "destination": "/tmp/user_data.sh"
+      "source": "scripts/master-config.sh",
+      "destination": "/tmp/master-config.sh"
    },
    {
       "type": "shell",
       "inline": [
-        "chmod +x /tmp/user_data.sh"
+        "sudo mv /tmp/master-config.sh /var/lib/cloud/scripts/per-boot  && sudo chmod +x /var/lib/cloud/scripts/per-boot/master-config.sh"
+      ]
+    },
+   {
+      "type": "file",
+      "source": "scripts/master-config-systemd.sh",
+      "destination": "/tmp/master-config-systemd.sh"
+   },
+   {
+      "type": "shell",
+      "inline": [
+        "sudo mv /tmp/master-config-systemd.sh /usr/lib/systemd/system/master-config  && sudo chmod +x /usr/lib/systemd/system/master-config && sudo systemctl daemon-reload"
       ]
     },
    {
