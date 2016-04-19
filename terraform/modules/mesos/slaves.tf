@@ -21,11 +21,12 @@ resource "aws_iam_instance_profile" "mesos" {
 }
 
 resource "aws_launch_configuration" "mesos-slaves" {
-    image_id = "ami-8b8c57f8"
+    image_id = "ami-f0fe7283"
     instance_type = "${var.instance_type}"
     security_groups = ["${aws_security_group.slaves.id}"]
     iam_instance_profile = "${aws_iam_instance_profile.mesos.name}"
     key_name = "${var.aws_key_name}"
+    user_data = "MASTER=${aws_elb.master-elb.dns_name}"
     associate_public_ip_address = false
 
 }
