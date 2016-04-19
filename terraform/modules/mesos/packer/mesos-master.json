@@ -42,7 +42,7 @@
    {
       "type": "shell",
       "inline": [
-        "sudo mv /tmp/master-config-systemd.sh /usr/lib/systemd/system/master-config  && sudo chmod +x /usr/lib/systemd/system/master-config && sudo systemctl daemon-reload"
+        "sudo mv /tmp/master-config-systemd.sh /usr/lib/systemd/system/master-config.service  && sudo chmod +x /usr/lib/systemd/system/master-config.service && sudo systemctl daemon-reload && sudo systemctl enable master-config.service"
       ]
     },
    {
@@ -54,6 +54,12 @@
       "type": "ansible-local",
       "playbook_file": "../provisioning/playbooks/master_packer.yml",
       "playbook_dir": "../provisioning/playbooks"
-   }
+   },
+{
+      "type": "shell",
+      "inline": [
+        "sudo systemctl enable zookeeper"
+      ]
+    }
   ]
 }
