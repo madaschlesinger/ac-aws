@@ -1,9 +1,9 @@
 resource "aws_autoscaling_group" "terraform-mesos-cluster" {
     availability_zones = ["eu-west-1a"]
     name = "jpmc-mesos-cluster"
-    min_size = 1
+    min_size = 2
     max_size = 3
-    desired_capacity = 1
+    desired_capacity = 2
     health_check_type = "EC2"
     launch_configuration = "${aws_launch_configuration.mesos-slaves.name}"
     vpc_zone_identifier = ["${aws_subnet.mesos_slaves.id}"]
@@ -21,7 +21,7 @@ resource "aws_iam_instance_profile" "mesos" {
 }
 
 resource "aws_launch_configuration" "mesos-slaves" {
-    image_id = "ami-f0fe7283"
+    image_id = "ami-1c0b876f"
     instance_type = "${var.instance_type}"
     security_groups = ["${aws_security_group.slaves.id}"]
     iam_instance_profile = "${aws_iam_instance_profile.mesos.name}"
@@ -30,3 +30,4 @@ resource "aws_launch_configuration" "mesos-slaves" {
     associate_public_ip_address = false
 
 }
+
