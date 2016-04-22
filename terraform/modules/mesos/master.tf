@@ -1,14 +1,32 @@
 ## First create a stable point to call master
 
-resource "aws_network_interface" "mesos-master" {
-    subnet_id = "${aws_subnet.master.id}"
-    private_ips = ["10.1.7.50"]
-    security_groups = ["${aws_security_group.master.id}"]
-    source_dest_check = "false"
-    attachment {
-        instance = "${aws_instance.master.id}"
-        device_index = 1
-    }
+resource "aws_elb" "master-elb" {
+  name = "master-elb"
+  internal = "true"
+  subnets = ["${aws_subnet.master.id}"]
+  security_groups = ["${aws_security_group.master.id}"]
+
+  listener {
+    instance_port = 2181 
+    instance_protocol = "tcp"
+    lb_port = 2181
+    lb_protocol = "tcp"
+  }
+
+  health_check {
+    healthy_threshold = 2
+    unhealthy_threshold = 2
+    timeout = 3
+    target = "TCP:2181"
+    interval = 30
+  }
+  instances = ["${aws_instance.master.id}"]
+  connection_draining = true
+  connection_draining_timeout = 400
+
+  tags {
+    Name = "mesos-master-elb"
+  }
 }
 
 resource "aws_instance" "master" {
