@@ -5,5 +5,3 @@
     - template: src=../templates/consul.service.client.j2 dest=/usr/lib/systemd/system/consul-slave.service
 
     - template: src="../templates/consul.server.config.json.j2" dest="/etc/consul.d/server/consul.server.config.json"
-
-    - service: name="consul-slave" state=started  enabled=yes
