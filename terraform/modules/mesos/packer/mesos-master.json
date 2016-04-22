@@ -36,17 +36,6 @@
     },
    {
       "type": "file",
-      "source": "scripts/master-config-systemd.sh",
-      "destination": "/tmp/master-config-systemd.sh"
-   },
-   {
-      "type": "shell",
-      "inline": [
-        "sudo mv /tmp/master-config-systemd.sh /usr/lib/systemd/system/master-config.service  && sudo chmod +x /usr/lib/systemd/system/master-config.service && sudo systemctl daemon-reload && sudo systemctl enable master-config.service"
-      ]
-    },
-   {
-      "type": "file",
       "source": "../provisioning/repo/docker.repo",
       "destination": "/home/ec2-user/docker.repo"
    },
