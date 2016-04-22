@@ -6,7 +6,6 @@
     - name: Install Docker
       yum: pkg={{item}} state=latest update_cache=yes
       with_items:
-      - selinux-policy-targeted
       - docker-engine
 
     - user: name=ec2-user groups=docker append=yes
