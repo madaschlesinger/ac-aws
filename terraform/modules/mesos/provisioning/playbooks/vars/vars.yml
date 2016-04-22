@@ -1,11 +1,11 @@
 ---
    key_name:          ec2-user
-   weave_enabled:     "True"
-   consul_enabled:    "True"
+   weave_enabled:     "False"
+   consul_enabled:    "False"
    consul_UI:         "False"
    registry_enabled:  "False"
-   haproxy_enabled:   "True"
-   spark_enabled:     "True"
+   haproxy_enabled:   "False"
+   spark_enabled:     "False"
 
 
    ec2_region:        "eu-west-1"
