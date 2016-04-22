@@ -12,32 +12,43 @@
     "instance_type": "t2.micro",
     "ssh_username": "ec2-user",
     "ami_name": "Mesos-Slave {{timestamp}}",
-    "user_data_file": "scripts/user_data.sh"
+    "user_data_file": "scripts/notty.sh"
   }],
   "provisioners": [
    {
       "type": "shell",
       "inline": [
         "sleep 30",
-        "curl -O http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-5.noarch.rpm && sudo yum localinstall -y epel-release-7-5.noarch.rpm && sudo yum -y install python python-devel ansible"
+        "curl -O http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-6.noarch.rpm && sudo yum localinstall -y epel-release-7-6.noarch.rpm && sudo yum -y install python python-devel ansible"
       ]
     },
    {
       "type": "file",
-      "source": "scripts/mesos-slave-configure.sh",
-      "destination": "/tmp/mesos-slave-configure"
+      "source": "scripts/slave-config.sh",
+      "destination": "/tmp/slave-config.sh"
    },
+   {
+      "type": "shell",
+      "inline": [
+        "sudo mv /tmp/slave-config.sh /var/lib/cloud/scripts  && sudo chmod +x /var/lib/cloud/scripts/slave-config.sh"
+      ]
+    },
+{
+      "type": "file",
+      "source": "scripts/slave-config-systemd.sh",
+      "destination": "/tmp/slave-config-systemd.sh"
+   },
+   {
+      "type": "shell",
+      "inline": [
+        "sudo mv /tmp/slave-config-systemd.sh /usr/lib/systemd/system/slave-config.service  && sudo systemctl daemon-reload && sudo systemctl enable slave-config"
+      ]
+    },
    {
       "type": "file",
       "source": "../provisioning/repo/docker.repo",
       "destination": "/home/ec2-user/docker.repo"
    },
-   {
-      "type": "shell",
-      "inline": [
-        "sudo mv /tmp/mesos-slave-configure /etc/init.d && chmod +x /etc/init.d/mesos-slave-configure && sudo chkconfig mesos-slave-configure on"
-      ]
-    },
    {
       "type": "ansible-local",
       "playbook_file": "../provisioning/playbooks/slave_packer.yml",
