@@ -85,6 +85,35 @@ resource "aws_security_group" "slaves" {
   }
 }
 
+resource "aws_security_group" "slaves_public" {
+  name = "Mesos Public Slaves SG - Terraform"
+  description = "Allow access only from internal "
+  vpc_id = "${aws_vpc.mesos.id}"
+
+  ingress {
+      from_port = 80
+      to_port = 80
+      protocol = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+      from_port = 0
+      to_port = 0
+      protocol = "-1"
+      cidr_blocks = ["10.1.3.0/24","10.1.7.0/24"]
+  }
+
+
+  egress {
+      from_port = 0
+      to_port = 0
+      protocol = "-1"
+      cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+
 resource "aws_security_group" "master" {
   name = "Mesos Masters SG - Terraform"
   description = "Allow access only from internal "
