@@ -1,0 +1,22 @@
+{
+  "id": "marathon-lb",
+  "cpus": 0,
+  "mem": 0,
+  "cmd": "/marathon-lb/run sse --marathon http://10.1.7.213:8080 --group external",
+  "disk": 128,
+  "container": {
+    "type": "DOCKER",
+    "docker": {
+      "type": "DOCKER",
+      "image": "mesosphere/marathon-lb",
+      "forcePullImage": true,
+      "network": "BRIDGE",
+      "portMappings": [
+        { "containerPort": 80, "hostPort": 0, "servicePort": 19000 }
+      ]
+    },
+    "env": {
+    "PORTS": "80,443,9090"
+  }
+}
+}
