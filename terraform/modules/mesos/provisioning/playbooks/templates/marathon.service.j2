@@ -1,0 +1,14 @@
+# {{ansible_managed}}
+
+[Unit]
+Description=Marathon
+After=network.target
+Wants=network.target
+
+[Service]
+ExecStart=/usr/bin/bash -c "/opt/marathon/bin/start --master $(cat /etc/mesos/zk) --hostname `cat /etc/marathon/conf/hostname` --zk $(sed 's/mesos/marathon/g' /etc/mesos/zk)"
+Restart=always
+RestartSec=20
+
+[Install]
+WantedBy=multi-user.target
