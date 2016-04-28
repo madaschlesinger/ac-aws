@@ -24,6 +24,7 @@ resource "aws_elb" "java-zeromq-server" {
 
   tags {
     Name = "java-service-terraform-elb"
+    Group = "${var.tag_value}"
   }
 }
 

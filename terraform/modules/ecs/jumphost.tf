@@ -7,5 +7,6 @@ resource "aws_instance" "jumphost" {
     associate_public_ip_address = true
     tags {
         Name = "JumpHost-ECS"
+        Group = "${var.tag_value}"
     }
 }

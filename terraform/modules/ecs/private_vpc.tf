@@ -4,6 +4,7 @@ resource "aws_vpc" "terraform_vpc" {
     enable_dns_support = true
     tags {
             Name = "Terraform ECS VPC"
+            Group = "${var.tag_value}"
         }
 }
 
@@ -13,6 +14,7 @@ resource "aws_internet_gateway" "gw" {
 
     tags {
         Name = "Internet Gateway Terraform ECS"
+        Group = "${var.tag_value}"
     }
 }
 
@@ -25,6 +27,7 @@ resource "aws_route_table" "r" {
 
     tags {
         Name = "Route Table"
+        Group = "${var.tag_value}"
     }
 }
 
@@ -37,6 +40,7 @@ resource "aws_route_table" "nat" {
 
     tags {
         Name = "Route Table NAT Terraform"
+        Group = "${var.tag_value}"
     }
 }
 
@@ -47,12 +51,14 @@ resource "aws_subnet" "slaves" {
 
     tags {
         Name = "Main_Terraform_vpc_slaves"
+        Group = "${var.tag_value}"
     }
 }
 
 resource "aws_route_table_association" "jumphost-route" {
     subnet_id = "${aws_subnet.jumphosts.id}"
     route_table_id = "${aws_route_table.r.id}"
+
 }
 
 
@@ -63,6 +69,7 @@ resource "aws_subnet" "jumphosts"  {
 
     tags {
         Name = "JumpHosts subnet"
+        Group = "${var.tag_value}"
     }
 }
 

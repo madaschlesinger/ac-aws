@@ -24,5 +24,6 @@ resource "aws_elb" "java-service-s3" {
 
   tags {
     Name = "java-service-terraform-elb"
+    Group = "${var.tag_value}"
   }
 }
