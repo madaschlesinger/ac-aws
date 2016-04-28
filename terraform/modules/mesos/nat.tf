@@ -8,6 +8,7 @@ resource "aws_instance" "nat" {
     source_dest_check = "false"
     tags {
         Name = "NAT Gateway for Mesos"
+        Group = "${var.tag_value}"
     }
 }
 
