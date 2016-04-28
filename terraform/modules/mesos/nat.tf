@@ -12,6 +12,11 @@ resource "aws_instance" "nat" {
     }
 }
 
+resource "aws_route_table_association" "nat-gw-routing" {
+    subnet_id = "${aws_subnet.natgateways.id}"
+    route_table_id = "${aws_route_table.r.id}"
+}
+
 output "nat-mesos" {
     value = "${aws_instance.nat.id}"
 }
