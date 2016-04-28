@@ -14,7 +14,7 @@ resource "aws_security_group" "jumphosts" {
       from_port = 1
       to_port = 65535 
       protocol = "tcp"
-      cidr_blocks = ["10.1.1.0/24","10.1.2.0/24","10.1.3.0/24","10.1.4.0/24"]
+      cidr_blocks = ["10.1.1.0/24","10.1.2.0/24","10.1.3.0/24","10.1.4.0/24","10.1.8.0/24"]
   }
 }
 
@@ -101,7 +101,7 @@ resource "aws_security_group" "slaves_public" {
       from_port = 0
       to_port = 0
       protocol = "-1"
-      cidr_blocks = ["10.1.3.0/24","10.1.7.0/24"]
+      cidr_blocks = ["10.1.3.0/24","10.1.7.0/24","10.1.8.0/24"]
   }
 
 
@@ -264,7 +264,7 @@ resource "aws_security_group" "shared-services" {
       from_port = 2181
       to_port = 2181
       protocol = "tcp"
-      cidr_blocks = ["10.1.1.0/24"]
+      cidr_blocks = ["10.1.1.0/24","10.1.7.0/24","10.1.3.0/24","10.1.8.0/24","10.1.4.0/24"]
   }
 
 
