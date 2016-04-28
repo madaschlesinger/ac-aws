@@ -9,11 +9,6 @@ resource "aws_subnet" "natgateways"  {
     }
 }
 
-resource "aws_route_table_association" "nat-route-table" {
-    subnet_id = "${aws_subnet.natgateways.id}"
-    route_table_id = "${aws_route_table.r.id}"
-}
-
 ## Create Public Network for Public Mesos slaves
 
 resource "aws_subnet" "mesos_slaves_public" {
