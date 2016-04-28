@@ -3,6 +3,7 @@ resource "aws_route53_zone" "dev" {
   vpc_id = "${aws_vpc.terraform_vpc.id}"
   tags {
     Environment = "dev"
+    Group = "${var.tag_value}"
   }
 }
 

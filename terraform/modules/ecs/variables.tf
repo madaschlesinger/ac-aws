@@ -4,6 +4,7 @@ variable "aws_key_name" {}
 variable "instance_type" {}
 variable "aws_region" {}
 variable "sec_groups_ecs" {}
+variable "tag_value" {}
 
 
 provider "aws" {

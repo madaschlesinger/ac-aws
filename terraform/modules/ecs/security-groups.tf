@@ -16,6 +16,12 @@ resource "aws_security_group" "jumphosts" {
       protocol = "tcp"
       cidr_blocks = ["10.0.1.0/24","10.0.2.0/24","10.0.3.0/24","10.0.4.0/24"]
   }
+  
+  tags {
+    Name = "JumpHost SG"
+    Group = "${var.tag_value}"
+  }
+
 }
 
 resource "aws_security_group" "webservers" {
@@ -36,6 +42,12 @@ resource "aws_security_group" "webservers" {
       protocol = "-1"
       cidr_blocks = ["10.0.1.0/24"]
   }
+
+  tags {
+    Name = "WebServers SG"
+    Group = "${var.tag_value}"
+  }
+
 }
 
 resource "aws_security_group" "ELBS" {
@@ -63,6 +75,12 @@ resource "aws_security_group" "ELBS" {
       protocol = "-1"
       cidr_blocks = ["10.0.1.0/24"]
   }
+
+  tags {
+    Name = "ELBs SG"
+    Group = "${var.tag_value}"
+  }
+
 }
 
 resource "aws_security_group" "ecs-instances" {
@@ -83,6 +101,13 @@ resource "aws_security_group" "ecs-instances" {
       protocol = "-1"
       cidr_blocks = ["0.0.0.0/0"]
   }
+
+  tags {
+    Name = "ECS Instances SG"
+    Group = "${var.tag_value}"
+  }
+
+
 }
 
 
@@ -104,6 +129,12 @@ resource "aws_security_group" "NAT-Gateway" {
       protocol = -1 
       cidr_blocks = ["0.0.0.0/0"]
   }
+
+  tags {
+    Name = "Nat Gateway SG"
+    Group = "${var.tag_value}"
+  }
+
 }
 
 resource "aws_security_group" "shared-services" {
@@ -131,4 +162,10 @@ resource "aws_security_group" "shared-services" {
       protocol = "-1"
       cidr_blocks = ["10.0.1.0/24","10.0.2.0/24","10.0.3.0/24","10.0.4.0/24"]
   }
+
+  tags {
+    Name = "Shared Services SG"
+    Group = "${var.tag_value}"
+  }
+
 }

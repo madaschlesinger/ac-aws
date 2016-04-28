@@ -6,6 +6,7 @@ resource "aws_subnet" "ELBS" {
 
     tags {
         Name = "ELBS_public_subnet"
+        Group = "${var.tag_value}"
     }
 }
 
@@ -22,6 +23,7 @@ resource "aws_subnet" "natgateways"  {
 
     tags {
         Name = "NAT Gateway subnet"
+        Group = "${var.tag_value}"
     }
 }
 
