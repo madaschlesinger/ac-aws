@@ -1,8 +1,8 @@
 {
   "id": "marathon-lb",
-  "cpus": 0,
-  "mem": 0,
-  "cmd": "/marathon-lb/run sse --marathon http://10.1.7.40:8080 --group external",
+  "cpus": 0.4,
+  "mem": 100,
+  "cmd": "/marathon-lb/run sse --marathon http://10.1.7.117:8080 --group external",
   "env": {
     "PORTS": "80,81,443,9090"
   },
@@ -14,10 +14,10 @@
       "forcePullImage": true,
       "network": "BRIDGE",
       "portMappings": [
-        { "containerPort": 80, "hostPort": 0, "servicePort": 19000 },
-        { "containerPort": 81, "hostPort": 0, "servicePort": 19001 },
-        { "containerPort": 443, "hostPort": 0, "servicePort": 19002 },
-        { "containerPort": 9090, "hostPort": 0, "servicePort": 19003 }
+        { "containerPort": 80, "hostPort": 31300, "protocol": "tcp" },
+        { "containerPort": 81, "hostPort": 0, "protocol": "tcp" },
+        { "containerPort": 443, "hostPort": 0, "protocol": "tcp" },
+        { "containerPort": 9090, "hostPort": 31301, "protocol": "tcp" }
       ]
     }
   }
