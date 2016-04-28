@@ -12,8 +12,8 @@
 
     - include: tasks/rpms.yml
 
-    - include: tasks/zookeeper_packer.yml
- 
+    - include: tasks/java.yml
+
     - include: tasks/marathon_packer.yml
 
     - include: tasks/mesos.yml
@@ -36,5 +36,7 @@
   
     - include: tasks/spark.yml
       when: spark_enabled == "True"
+
+    - template: src="templates/mesos.zk.j2" dest="/etc/mesos/zk"
 
     - service: name=mesos-slave state=stopped enabled=no
