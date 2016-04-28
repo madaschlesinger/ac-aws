@@ -2,6 +2,10 @@
   "id": "nginx",
   "cpus": 0,
   "mem": 0,
+  "labels": {
+        "HAPROXY_GROUP":"external",
+        "HAPROXY_0_VHOST" : "haproxy-elb-1360141409.eu-west-1.elb.amazonaws.com"
+      },
   "container": {
     "type": "DOCKER",
     "docker": {
