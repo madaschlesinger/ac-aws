@@ -1,10 +1,10 @@
 {
   "id": "jenkins6",
   "cpus": 0.5,
-  "mem": 400.0,
+  "mem": 200.0,
   "labels": {
-        "HAPROXY_GROUP" : "external",
-        "HAPROXY_0_VHOST" : "54.194.91.160"
+        "HAPROXY_GROUP":"external",
+        "HAPROXY_0_VHOST" : "nginx.jpmorgan.com"
       },
   "container": {
     "type": "DOCKER",
