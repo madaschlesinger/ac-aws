@@ -8,6 +8,7 @@ resource "aws_instance" "zookeeper" {
     subnet_id = "${aws_subnet.shared-services.id}"
     tags {
         Name = "Zookeeper"
+        Group = "${var.tag_value}"
     }
 }
 
@@ -52,5 +53,6 @@ resource "aws_elb" "zookeeper-elb" {
 
   tags {
     Name = "zookeeper-elb"
+    Group = "${var.tag_value}"
   }
 }

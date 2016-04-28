@@ -5,5 +5,6 @@ resource "aws_subnet" "shared-services"  {
 
     tags {
         Name = "Shared Services subnet"
+        Group = "${var.tag_value}"
     }
 }

@@ -4,6 +4,7 @@ resource "aws_vpc" "mesos" {
     enable_dns_support = true
     tags {
             Name = "Terraform Mesos VPC"
+            Group = "${var.tag_value}"
         }
 }
 
@@ -13,6 +14,7 @@ resource "aws_internet_gateway" "gw" {
 
     tags {
         Name = "Internet Gateway Terraform Mesos"
+        Group = "${var.tag_value}"
     }
 }
 
@@ -25,6 +27,7 @@ resource "aws_route_table" "r" {
 
     tags {
         Name = "Route Table"
+        Group = "${var.tag_value}"
     }
 }
 
@@ -37,6 +40,7 @@ resource "aws_route_table" "nat" {
 
     tags {
         Name = "Route Table NAT Terraform"
+        Group = "${var.tag_value}"
     }
 }
 
@@ -47,6 +51,7 @@ resource "aws_subnet" "mesos_slaves" {
 
     tags {
         Name = "Main_Terraform_vpc_mesos_slaves"
+        Group = "${var.tag_value}"
     }
 }
 
@@ -57,6 +62,7 @@ resource "aws_subnet" "master" {
 
     tags {
         Name = "Main_Terraform_vpc_mesos_masters"
+        Group = "${var.tag_value}"
     }
 }
 
@@ -73,6 +79,7 @@ resource "aws_subnet" "jumphosts"  {
 
     tags {
         Name = "JumpHosts subnet Mesos VPC"
+        Group = "${var.tag_value}"
     }
 }
 

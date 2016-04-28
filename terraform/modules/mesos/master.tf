@@ -9,6 +9,7 @@ resource "aws_instance" "master" {
     source_dest_check = "false"
     tags {
         Name = "Mesos Master"
+        Group = "${var.tag_value}"
     }
 }
 

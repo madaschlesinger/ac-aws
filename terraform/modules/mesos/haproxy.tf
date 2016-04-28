@@ -27,5 +27,6 @@ resource "aws_elb" "haproxy-elb" {
 
   tags {
     Name = "haproxy-elb"
+    Group = "${var.tag_value}"
   }
 }

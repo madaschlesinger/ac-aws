@@ -3,6 +3,7 @@ resource "aws_route53_zone" "mesos-dev" {
   vpc_id = "${aws_vpc.mesos.id}"
   tags {
     Environment = "mesos-dev"
+    Group = "${var.tag_value}"
   }
 }
 

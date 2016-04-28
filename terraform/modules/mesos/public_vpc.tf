@@ -6,6 +6,7 @@ resource "aws_subnet" "natgateways"  {
 
     tags {
         Name = "NAT Gateway subnet for Mesos"
+        Group = "${var.tag_value}"
     }
 }
 
@@ -18,6 +19,7 @@ resource "aws_subnet" "mesos_slaves_public" {
 
     tags {
         Name = "Terraform_public_mesos_slaves"
+        Group = "${var.tag_value}"
     }
 }
 
