@@ -1,13 +1,20 @@
 ---
 
-    - name: Install Marathon 
-      yum: pkg={{item}} state=latest update_cache=yes
-      with_items:
-      - marathon
+    - name: Get Marathon 1.1.0-RC1
+      get_url: url=http://downloads.mesosphere.com/marathon/v1.1.0-RC1/marathon-1.1.0-RC1.tgz dest=/opt
+ 
+    - unarchive: src=/opt/marathon-1.1.0-RC1.tgz dest=/opt creates=marathon-1.1.0-RC1
+
+    - file: src=/opt/marathon dest=/opt/marathon-1.1.0-RC1  state=link
 
     - file: path=/etc/marathon/conf state=directory mode=0744
     - template : src="../templates/external_ip.j2" dest="/etc/marathon/conf/hostname"
       register: RestartMarathon
+
+    - name: Systemd script for Marathon.
+      template: src=../templates/marathon.service.j2 dest=/usr/lib/systemd/system/marathon.service
+
+    - shell: systemctl daemon-reload
 
     - service : name=marathon state=restarted enabled=yes
       when: RestartMarathon.changed
