@@ -22,7 +22,7 @@ resource "aws_route53_record" "zookeeper-dev" {
 
 resource "aws_route_table_association" "zookeeper-routing" {
     subnet_id = "${aws_subnet.shared-services.id}"
-    route_table_id = "${aws_route_table.r.id}"
+    route_table_id = "${aws_route_table.nat.id}"
 }
 
 ## First create a stable point to call Zookeeper 
