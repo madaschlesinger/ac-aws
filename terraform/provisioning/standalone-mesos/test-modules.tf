@@ -21,6 +21,7 @@ module "mesos" {
     aws_region     = "eu-west-1"
     aws_key_name   = "ec2-user"
     instance_type  = "t2.micro"
+    tag_value      = "${var.tag_value}"
     sec_groups_mesos = "10.1.1.0/16"
     slaves_ami     = "${var.slaves_ami}"
     master_ami     = "${var.master_ami}"
