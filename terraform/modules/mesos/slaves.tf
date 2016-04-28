@@ -21,12 +21,12 @@ resource "aws_iam_instance_profile" "mesos" {
 }
 
 resource "aws_launch_configuration" "mesos-slaves" {
-    image_id = "ami-1c0b876f"
+    image_id = "${var.slaves_ami}"
     instance_type = "${var.instance_type}"
     security_groups = ["${aws_security_group.slaves.id}"]
     iam_instance_profile = "${aws_iam_instance_profile.mesos.name}"
     key_name = "${var.aws_key_name}"
-    user_data = "MASTER=${aws_elb.master-elb.dns_name}"
+    user_data = "ZOOKEEPER=${aws_elb.zookeeper-elb.dns_name}"
     associate_public_ip_address = false
 
 }
@@ -40,6 +40,7 @@ resource "aws_autoscaling_group" "terraform-public-mesos-cluster" {
     max_size = 3
     desired_capacity = 1
     health_check_type = "EC2"
+    load_balancers = ["${aws_elb.haproxy-elb.id}"]
     launch_configuration = "${aws_launch_configuration.public-mesos-slaves.name}"
     vpc_zone_identifier = ["${aws_subnet.mesos_slaves_public.id}"]
     tag {
@@ -56,12 +57,12 @@ resource "aws_iam_instance_profile" "mesos-public" {
 }
 
 resource "aws_launch_configuration" "public-mesos-slaves" {
-    image_id = "ami-1c0b876f"
+    image_id = "${var.slaves_ami}"
     instance_type = "${var.instance_type}"
     security_groups = ["${aws_security_group.slaves_public.id}"]
     iam_instance_profile = "${aws_iam_instance_profile.mesos-public.name}"
     key_name = "${var.aws_key_name}"
-    user_data = "MASTER=${aws_elb.master-elb.dns_name}"
+    user_data = "ZOOKEEPER=${aws_elb.zookeeper-elb.dns_name}"
     associate_public_ip_address = true
 
 }
