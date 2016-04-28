@@ -1,9 +1,9 @@
 #!/bin/bash
 
-MASTER=`curl http://169.254.169.254/latest/user-data | awk -F= '{print $2}'`
+ZOOKEEPER=`curl http://169.254.169.254/latest/user-data | grep ZOOKEEPER | awk -F= '{print $2}'`
 IP=`ifconfig eth0 | grep inet | head -1 | awk '{print $2}'`
 
-sed -i 's/MASTER/'"${MASTER}"'/g' /etc/mesos/zk
+sed -i 's/ZOOKEEPER/'"${ZOOKEEPER}"'/g' /etc/mesos/zk
 #sed -i 's/MASTER/'"${MASTER}"'/g' /usr/lib/systemd/system/weave.service
 #sed -i 's/MASTER/'"${MASTER}"'/g' /usr/lib/systemd/system/consul-slave.service
 
