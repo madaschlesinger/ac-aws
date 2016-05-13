@@ -6,6 +6,7 @@
    registry_enabled:  "False"
    haproxy_enabled:   "False"
    spark_enabled:     "False"
+   calico_enabled:    "False"
 
 
    ec2_region:        "eu-west-1"
