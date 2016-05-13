@@ -1,6 +1,8 @@
 #!/bin/bash
 
 ZOOKEEPER=`curl http://169.254.169.254/latest/user-data | grep ZOOKEEPER | awk -F= '{print $2}'`
+MASTER=`curl http://169.254.169.254/latest/user-data | grep MASTER | awk -F= '{print $2}'`
+
 IP=`ifconfig eth0 | grep inet | head -1 | awk '{print $2}'`
 
 sed -i 's/ZOOKEEPER/'"${ZOOKEEPER}"'/g' /etc/mesos/zk
@@ -10,6 +12,8 @@ sed -i 's/ZOOKEEPER/'"${ZOOKEEPER}"'/g' /etc/mesos/zk
 
 sed -i 's/EXTERNAL_IP/'"${HOSTNAME}"'/g' /etc/mesos-slave/hostname
 sed -i 's/HOSTNAME/'"${IP}"'/g' /etc/mesos-slave/ip
+
+echo ETCD_AUTHORITY=["${MASTER}":2379] >> /etc/default/mesos-slave
 
 systemctl restart mesos-slave
 #systemctl restart weave 
