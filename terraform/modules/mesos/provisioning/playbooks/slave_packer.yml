@@ -16,6 +16,11 @@
 
     - include: tasks/mesos.yml
 
+    - include: tasks/calico-mesos.yml
+      when: calico_enabled == "True"
+      tags:
+        - calico
+
     - include: tasks/weave-slave.yml
       when: weave_enabled == "True"
 
