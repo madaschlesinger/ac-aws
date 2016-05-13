@@ -26,7 +26,7 @@ resource "aws_launch_configuration" "mesos-slaves" {
     security_groups = ["${aws_security_group.slaves.id}"]
     iam_instance_profile = "${aws_iam_instance_profile.mesos.name}"
     key_name = "${var.aws_key_name}"
-    user_data = "ZOOKEEPER=${aws_elb.zookeeper-elb.dns_name}"
+    user_data = "ZOOKEEPER=${aws_elb.zookeeper-elb.dns_name}\nMASTER=${aws_instance.master.private_ip}"
     associate_public_ip_address = false
 
 }
