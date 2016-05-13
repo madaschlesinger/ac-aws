@@ -1,16 +1,20 @@
 ---
 
-    - name: Install Calico-Mesos 
-      yum: pkg={{item}} state=latest update_cache=yes
-      with_items:
-      - epel-release
-      - wget
+    - file: path=/calico state=directory mode=0744
 
-    - name: Get Calico Mesos tar file
-      get_url: url=https://github.com/projectcalico/calico-mesos/releases/download/v0.1.3/calico-mesos-rpms.tar dest=/tmp
+    - name: Get Calico Mesos Executable
+      get_url: url=https://github.com/projectcalico/calico-mesos/releases/download/v0.1.5/calico_mesos dest=/calico
 
-    - shell: tar -xvf /tmp/calico-mesos-rpms.tar
+    - shell: chmod +x /calico/calico_mesos
 
-    - shell: yum install -y --skip-broken /home/ec2-user/calico-mesos-rpms/*.rpm
+    - name: Get Calico Mesos plugin
+      get_url: url=https://raw.githubusercontent.com/projectcalico/calico-containers/master/docs/mesos/vagrant-centos/sources/modules.json dest=/etc/mesos-slave/modules
 
-    - service: name=calico-mesos state=started enabled=yes
+    - name: Get Calicoctl
+      get_url: url=https://github.com/projectcalico/calico-containers/releases/download/v0.18.0/calicoctl dest=/opt
+
+    - shell: chmod +x /opt/calicoctl
+
+    - name: Set calicoctl systemd script
+      template: src=../templates/calicoctl.service.j2 dest=/usr/lib/systemd/system
+
