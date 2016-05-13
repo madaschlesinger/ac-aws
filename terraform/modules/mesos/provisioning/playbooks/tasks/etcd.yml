@@ -1,0 +1,10 @@
+---
+
+    - get_url: url=https://github.com/coreos/etcd/releases/download/v2.3.3/etcd-v2.3.3-linux-amd64.tar.gz dest=/opt
+  
+    - unarchive: src=/opt/etcd-v2.3.3-linux-amd64.tar.gz dest=/opt copy=no
+
+    - template: src=../templates/etcd.service.j2 dest=/usr/lib/systemd/system/etcd.service
+
+    - service: name=etcd state=stopped enabled=true
+

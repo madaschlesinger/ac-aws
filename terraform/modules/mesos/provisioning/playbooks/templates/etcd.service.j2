@@ -1,0 +1,14 @@
+# {{ansible_managed}}
+
+[Unit]
+Description=Etcd
+After=network.target
+Wants=network.target
+
+[Service]
+ExecStart=/opt/etcd-v2.3.3-linux-amd64/etcd
+Restart=always
+RestartSec=20
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,15 @@
+# {{ansible_managed}}
+
+[Unit]
+Description=Calico
+After=network.target
+Wants=network.target
+Before=mesos-slave
+
+[Service]
+ExecStart=eval "`cat /etc/mesos/modules`" && /opt/calicoctl node
+Restart=always
+RestartSec=20
+
+[Install]
+WantedBy=multi-user.target
