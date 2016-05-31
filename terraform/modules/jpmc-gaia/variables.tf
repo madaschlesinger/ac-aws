@@ -12,6 +12,9 @@ variable "aws_vpc_mesos" {}
 variable "aws_subnet_master" {}
 variable "aws_subnet_mesos_slaves" {}
 variable "aws_subnet_shared-services" {}
+variable "yum-repo_ami" {}
+variable "yum-repo_private_ip" {} 
+variable "security_group" {}
 
 variable "tag_value" {}
 
