@@ -4,7 +4,7 @@ resource "aws_instance" "zookeeper" {
     ami = "${var.zookeeper_ami}"
     instance_type = "t2.micro"
     key_name = "${var.aws_key_name}"
-    security_groups = ["${aws_security_group.shared-services.id}"]
+    security_groups = ["${var.security_group}"]
     subnet_id = "${var.aws_subnet_shared-services}"
     tags {
         Name = "Zookeeper"
